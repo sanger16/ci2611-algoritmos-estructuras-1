@@ -1,0 +1,35 @@
+\contentsline {section}{\numberline {1}Resumen Parcial 2}{3}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Técnicas de derivación de Invariantes}{3}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Arreglos}{3}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.3}Procedimientos}{3}{subsection.1.3}%
+\contentsline {subsection}{\numberline {1.4}Funciones}{3}{subsection.1.4}%
+\contentsline {section}{\numberline {2}Derivación de Invariantes}{4}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Ejercicios sección 4.3 Kaldewaij}{4}{subsection.2.1}%
+\contentsline {subsubsection}{\numberline {2.1.1}Ejercicio 0}{4}{subsubsection.2.1.1}%
+\contentsline {subsubsection}{\numberline {2.1.2}Ejercicio 4}{7}{subsubsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.2}Parcial 1 Ene-Mar 2025}{11}{subsection.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.1}Ejercicio 4}{11}{subsubsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.3}Tarea 6 2015}{14}{subsection.2.3}%
+\contentsline {subsubsection}{\numberline {2.3.1}Ejercicio 1-b}{14}{subsubsection.2.3.1}%
+\contentsline {subsubsection}{\numberline {2.3.2}Ejercicio 1-c}{17}{subsubsection.2.3.2}%
+\contentsline {subsubsection}{\numberline {2.3.3}Ejercicio 1-f}{20}{subsubsection.2.3.3}%
+\contentsline {section}{\numberline {3}Matríces}{23}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Ejercicios Prof. Chang}{23}{subsection.3.1}%
+\contentsline {subsubsection}{\numberline {3.1.1}Ejercicio 5: Iteración en matrices. Recorridos}{23}{subsubsection.3.1.1}%
+\contentsline {subsubsection}{\numberline {3.1.2}Ejercicio 6: Recorrido en Arreglos y Matríces, Procedimientos y Funciones.}{25}{subsubsection.3.1.2}%
+\contentsline {subsection}{\numberline {3.2}Ejercicios Tarea 3 Sep-Dic 2013}{26}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}Ejercicio 15}{26}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}Ejercicio 16}{27}{subsubsection.3.2.2}%
+\contentsline {subsubsection}{\numberline {3.2.3}Ejercicio 17}{28}{subsubsection.3.2.3}%
+\contentsline {section}{\numberline {4}Procedimientos y Funciones}{29}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Caso general B2 (Teoría)}{29}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Ejercicio Practica Ene-Mar 2025}{30}{subsection.4.2}%
+\contentsline {subsubsection}{\numberline {4.2.1}Ejercicio Examen Ene-Mar 2025}{32}{subsubsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.3}Ejercicios Prof. Chang}{33}{subsection.4.3}%
+\contentsline {subsubsection}{\numberline {4.3.1}Ejercicio 7: Corrección de llamadas a procedimientos. Euclides}{33}{subsubsection.4.3.1}%
+\contentsline {subsubsection}{\numberline {4.3.2}Ejercicio 8: Corrección de llamadas a procedimientos. Productos Notables}{35}{subsubsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.4}Ejercicios Tarea 3 Sep-Dic 2013}{38}{subsection.4.4}%
+\contentsline {subsubsection}{\numberline {4.4.1}Ejercicio 12}{38}{subsubsection.4.4.1}%
+\contentsline {subsubsection}{\numberline {4.4.2}Ejercicio 13}{40}{subsubsection.4.4.2}%
+\contentsline {subsubsection}{\numberline {4.4.3}Ejercicio 14}{41}{subsubsection.4.4.3}%
+\contentsline {subsubsection}{\numberline {4.4.4}Ejercicio 18}{43}{subsubsection.4.4.4}%
