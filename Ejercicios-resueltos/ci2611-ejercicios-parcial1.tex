@@ -1,0 +1,308 @@
+\documentclass{article}
+\author{}
+
+%Packages
+\usepackage{amsmath}
+\usepackage{amssymb}
+%\usepackage{mathabx}
+\usepackage{dirtytalk}
+\usepackage{textcomp}
+\usepackage[margin=0.5in]{geometry}
+\usepackage{tikz}
+\usetikzlibrary{arrows,positioning,shapes,fit,calc}
+\pgfdeclarelayer{background}
+\pgfsetlayers{background,main}
+\usepackage{setspace}
+\usepackage{framed}
+\doublespacing
+%---
+%Customize
+\newcommand{\myparagraph}[1]{\paragraph{#1}\mbox{}\\}
+\newcommand\myrule[1]{\multicolumn{1}{| l}{#1}}
+\def\multiset#1#2{\ensuremath{\left(\kern-.3em\left(\genfrac{}{}{0pt}{}{#1}{#2}\right)\kern-.3em\right)}}
+%---
+
+\title{CI2611 - Algoritmos y estructuras I \\ Parcial 1}
+\date{Abr-Jul 2025}
+\author{Daniel Delgado}
+\begin{document}
+\maketitle
+
+\section*{Tarea 4 2012}
+
+\paragraph{Problema 1-d} \par
+
+Probar la correctitud.\par
+
+$\{N>0\}$\par 
+$pal, k := true, 0$ \par
+$\{inv: pal \equiv (\forall i|0 \leq i < k : S[i]=S[N-i-1]) \land 0 \leq k \leq N\}\{cota: N-k\}$ \par 
+$do \; (k \neq N) \land pal \rightarrow$ \par 
+\hspace{1em} $pal, k := S[k]=S[N-k-1], k+1$ \par 
+$od$\par
+$\{pal \equiv (\forall i|0 \leq i < N : S[i]=S[N-i-1])\}$ \par
+
+\newpage
+
+\textbf{Demostración}\par
+
+\vspace{1em}
+
+\textbf{Prueba 1.a:} $\{P \land B0 \} S0 \{P\}$ \par
+$\{pal \equiv (\forall i | 0 \leq i < k : S[i]=S[N-i-1]) \land 0 \leq k \leq N \land (k \neq N \land pal)\}$ \par 
+\hspace{0.5em} $pal, k := (S[k]=S[n-k-1]), k+1$ \par 
+$\{pal \equiv (\forall i | 0 \leq i < k : S[i]=S[N-i-1]) \} \land 0 \leq k \leq N$ \par 
+
+\vspace{1em}
+
+Por regla de la asignación: \par
+
+$pal \equiv (\forall i | 0 \leq i < k : S[i]=S[N-i-1]) \land 0 \leq k \leq N \land (k \neq N \land pal) \Rightarrow$ \par
+$(pal \equiv (\forall i | 0 \leq i < k : S[i]=S[N-i-1]) \land 0 \leq k \leq N )(pal, k := (S[k]=S[n-k-1]), k+1)$ \par
+
+\vspace{1em}
+
+Suposicion del antecedente, empezando con el consecuente para llegar a true: \par
+$\qquad (pal \equiv (\forall i | 0 \leq i < k : S[i]=S[N-i-1]) \land 0 \leq k \leq N )(pal, k := (S[k]=S[n-k-1]), k+1)$ \par
+
+$\equiv  \qquad \langle Sustitucion \; textual \rangle$ \par
+
+$\qquad S[k]=S[n-k-1] \equiv (\forall i | 0 \leq i < k+1 : S[i]=S[N-i-1]) \land 0 \leq k+1 \leq N$ \par
+
+$\equiv  \qquad \langle Extrayendo \; ultimo \; elemento \; cuantificador \rangle$ \par
+
+$\qquad S[k]=S[n-k-1] \equiv (\forall i | 0 \leq i < k : S[i]=S[N-i-1]) \land S[k]=S[N-k-1] \land 0 \leq k+1 \leq N$ \par 
+
+$\equiv  \qquad \langle p \land (p \equiv q) \equiv p \land q  \rangle$ \par 
+
+$\qquad S[k]=S[n-k-1] \land (\forall i | 0 \leq i < k : S[i]=S[N-i-1]) \land S[k]=S[N-k-1] \land 0 \leq k+1 \leq N$ \par 
+
+$\Rightarrow  \qquad \langle p \land q \Rightarrow p  \rangle$ \par 
+
+$\qquad (\forall i | 0 \leq i < k : S[i]=S[N-i-1])$ \par 
+
+$\equiv  \qquad \langle Hipotesis: \; pal \equiv (\forall i | 0 \leq i < k : S[i]=S[N-i-1]) \equiv true  \rangle$ \par 
+
+$\qquad true$ \par 
+
+\newpage
+
+\textbf{Prueba 2:} $P \land \neg B0 \Rightarrow Q$ \par
+
+$pal \equiv (\forall i | 0 \leq i < k : S[i]=S[N-i-1]) \land 0 \leq k \leq N \land (k=N \lor \neg pal) \Rightarrow pal \equiv (\forall i | 0 \leq i < N : S[i]=S[N-i-1])$
+
+
+\vspace{1em}
+
+Suposición del antecedente: 
+\begin{framed}
+$H0: pal \equiv (\forall i | 0 \leq i < k : S[i]=S[N-i-1]) \equiv true$ \par
+$H1: 0 \leq k \leq N \equiv true$ \par 
+$H2: (k=N \lor \neg pal) \equiv true$ \par 
+
+\begin{framed}
+$\qquad true$\par 
+$\equiv  \qquad \langle H2 \rangle$\par 
+$\qquad k=N \lor \neg pal$
+
+Por casos:
+
+\begin{framed}
+$\qquad k=N$ \par 
+$\equiv  \qquad \langle H0 \rangle$\par 
+$\qquad k=N \land pal \equiv (\forall i | 0 \leq i < k : S[i]=S[N-i-1])$ \par 
+$\equiv  \qquad \langle Sustitucion \; k=N \rangle$\par 
+$\qquad k=N \land pal \equiv (\forall i | 0 \leq i < N : S[i]=S[N-i-1])$ \par 
+$\Rightarrow  \qquad \langle p \land q \Rightarrow p \rangle$\par 
+$\qquad pal \equiv (\forall i | 0 \leq i < N : S[i]=S[N-i-1])$ \par 
+$ \therefore \; H0 \land H1 \land H2 \Rightarrow pal \equiv (\forall i | 0 \leq i < N : S[i]=S[N-i-1])$\par 
+Por Sup. Antecedente + Caso: $k=N$
+\end{framed}
+\begin{framed}
+$\qquad \neg pal$ \par 
+$\equiv  \qquad \langle H0 \rangle$\par 
+$\qquad \neg true$ \par
+$\equiv  \qquad \langle \neg true \equiv false \rangle$\par 
+$\qquad false $ \par
+$\equiv  \qquad \langle false \Rightarrow p \rangle$\par 
+$\qquad pal \equiv (\forall i | 0 \leq i < N : S[i]=S[N-i-1]) $ \par 
+$ \therefore \; H0 \land H1 \land H2 \Rightarrow pal \equiv (\forall i | 0 \leq i < N : S[i]=S[N-i-1])$\par 
+Por Sup. Antecedente + Caso: $\neg pal$
+\end{framed}
+\end{framed}
+$ \therefore \; H0 \land H1 \land H2 \Rightarrow pal \equiv (\forall i | 0 \leq i < N : S[i]=S[N-i-1])$\par 
+Por Sup. Antecedente
+\end{framed}
+
+\section*{Tarea 5 2012}
+
+\paragraph{Problema 3-d} \par
+
+Calcular el índice académico de un trimestre. Suponga que en un arreglo de enteros de tamaño N se almacena la nota obtenida en cada materia y en otro arreglo se almacena el número de créditos correspondientes a esas materia. N representa el número de materias inscritas en el trimestre.
+
+[\par
+$\quad\quad const\;n,c : seq\;of\;int;$\par
+$\quad const\;N : int := |n|;$\par
+$\quad const\;M : int := |c|;$\par
+$\quad var\;i,sc : int;$\par
+$\quad var\;ia : float;$\par
+$\quad \{N>0 \land M>0 \land N=M \}$\par
+$\quad sc, i, ia := 0,0,0$\par
+$\quad \{inv: sc=(\sum k|0 \leq k < i: c[k]) \land ia=(\sum k|0 \leq k < i: n[k]*c[k]) \land 0 \leq i \leq M \land 0 \leq i \leq N \land N=M \}\{Cota: N-i\}$\par
+$\quad do \; i < N \rightarrow $\par
+$\quad\quad sc, i, ia := c[i]+sc, i + 1, ia+n[i]*c[i]$\par
+$\quad od$\par
+$\quad \{wp.(ia := ia/sc).Q\}$\par
+$\quad ia := ia/sc$\par
+$\quad \{sc=(\sum k|0 \leq k < M: c[k]) \land ia=(\sum k|0 \leq k < N: n[k]*c[k])/sc)\}$\par
+]\par 
+
+Hallar la precondición más débil de la asignación $wp.(ia := ia/sc).Q$.\par 
+
+$\qquad (sc=(\sum k|0 \leq k < M: c[k]) \land ia=(\sum k|0 \leq k < N: n[k]*c[k])/sc)(ia := ia/sc)$\par 
+$\equiv  \qquad \langle Sustitucion \; textual \rangle$\par
+$\qquad sc=(\sum k|0 \leq k < M: c[k]) \land ia/sc=(\sum k|0 \leq k < N: n[k]*c[k])/sc$\par 
+$\equiv  \qquad \langle Aritemetica \rangle$\par
+$\qquad sc=(\sum k|0 \leq k < M: c[k]) \land ia=(\sum k|0 \leq k < N: n[k]*c[k])$\par 
+
+Dado que la precondición más débil asegura correctitud, ya se tiene probada esta parte.
+
+\newpage
+
+\subsection*{Prueba 0}
+$\qquad \{N>0 \land M>0 \land N=M \}$\par
+$\quad sc, i, ia := 0,0,0$\par
+$\quad \{inv: sc=(\sum k|0 \leq k < i: c[k]) \land ia=(\sum k|0 \leq k < i: n[k]*c[k])/sc)\land 0 \leq i \leq M \land 0 \leq i \leq N \land N=M \}$
+
+Por regla de la asignación:
+
+$N>0 \land M>0 \land N=M \Rightarrow$\par 
+$(sc=(\sum k|0 \leq k < i: c[k]) \land ia=(\sum k|0 \leq k < i: n[k]*c[k])/sc\land 0 \leq i \leq M \land 0 \leq i \leq N \land N=M)(sc, i, ia := 0,0,0)$
+
+Método por fortalecimiento.\par 
+
+$\qquad (sc=(\sum k|0 \leq k < i: c[k]) \land ia=(\sum k|0 \leq k < i: n[k]*c[k])/sc\land 0 \leq i \leq M \land 0 \leq i \leq N \land N=M)(sc, i, ia := 0,0,0)$\par
+$\equiv  \qquad \langle Sustitucion \; Textual \rangle$\par
+$\qquad 0=(\sum k|0 \leq k < 0: c[k]) \land 0=(\sum k|0 \leq k < 0: n[k]*c[k])/sc\land 0 \leq 0 \leq M \land 0 \leq 0 \leq N \land N=M$\par 
+$\equiv  \qquad \langle Rango \; vacio: \; 0 \leq k < 0 \equiv false; (\sum k|false: P) = 0 \rangle$\par
+$\qquad 0=0 \land 0=0/sc\land 0 \leq 0 \leq M \land 0 \leq 0 \leq N \land N=M$\par 
+$\equiv  \qquad \langle 0=0 \equiv true; a \leq b < c \equiv a \leq b \land b < c \rangle$\par 
+$\qquad 0 \leq 0 \land 0 \leq M \land 0 \leq 0 \land 0 \leq N \land N=M$\par 
+$\equiv  \qquad \langle 0 \leq 0 \equiv true; \;  a \leq b \equiv a < b \lor a = b \rangle$\par 
+$\qquad (0 < N \lor 0 = N) \land (0 < M \lor 0 = M) \land N=M $\par 
+$\Leftarrow  \qquad \langle p \Rightarrow p \lor q \rangle$\par 
+$\qquad 0 < N \land 0 < M \land N=M $\par 
+$\equiv  \qquad \langle a<b \equiv b>a \rangle$\par 
+$\qquad N>0 \land M>0 \land N=M $\par 
+
+\newpage
+
+\subsection*{Prueba 1.a: $\{P \land B0\}S0\{P\}$}
+
+$\{sc=(\sum k|0 \leq k < i: c[k]) \land ia=(\sum k|0 \leq k < i: n[k]*c[k]) \land 0 \leq i \leq M \land 0 \leq i \leq N \land N=M \land i<N\}\\
+sc, i, ia := c[i]+sc, i + 1, ia+n[i]*c[i]\\
+\{sc=(\sum k|0 \leq k < i: c[k]) \land ia=(\sum k|0 \leq k < i: n[k]*c[k]) \land 0 \leq i \leq M \land 0 \leq i \leq N \land N = M\}$\par 
+
+Por regla de la asignación.\par 
+
+$sc=(\sum k|0 \leq k < i: c[k]) \land ia=(\sum k|0 \leq k < i: n[k]*c[k]) \land 0 \leq i \leq M \land 0 \leq i \leq N \land N=M \land i<N \Rightarrow \\
+(sc=(\sum k|0 \leq k < i: c[k]) \land ia=(\sum k|0 \leq k < i: n[k]*c[k]) \land 0 \leq i \leq M \land 0 \leq i \leq N \land N=M)(sc, i, ia := c[i]+sc, i + 1, ia+n[i]*c[i])$ \par 
+
+Fortalecimiento. \par 
+
+$\quad (sc=(\sum k|0 \leq k < i: c[k]) \land ia=(\sum k|0 \leq k < i: n[k]*c[k]) \land 0 \leq i \leq M \land 0 \leq i \leq N \land N=M)(sc, i, ia := c[i]+sc, i + 1, ia+n[i]*c[i])$\par 
+$\equiv  \qquad \langle Sustitucion \; Textual \rangle$ \par 
+$\qquad sc + c[i]=(\sum k|0 \leq k < i+1: c[k]) \land ia+n[i]*c[i]=(\sum k|0 \leq k < i+1: n[k]*c[k]) \land 0 \leq i+1 \leq M \land 0 \leq i+1 \leq N  \land N=M$ \par
+$\equiv  \qquad \langle Sacando \; ultimo \; termino \rangle$ \par 
+$\qquad sc + c[i]=(\sum k|0 \leq k < i: c[k])+c[i] \land ia+n[i]*c[i]=(\sum k|0 \leq k < i: n[k]*c[k])+n[i]*c[i] \land 0 \leq i+1 \leq M \land 0 \leq i+1 \leq N  \land N=M$ \par
+$\equiv  \qquad \langle Aritmetica \rangle$ \par 
+$\qquad sc=(\sum k|0 \leq k < i: c[k]) \land ia=(\sum k|0 \leq k < i: n[k]*c[k]) \land 0 \leq i+1 \leq M \land 0 \leq i+1 \leq N  \land N=M$ \par
+$\equiv  \qquad \langle a \leq b <c \equiv a \leq b \land b < c \rangle$ \par 
+$\qquad sc=(\sum k|0 \leq k < i: c[k]) \land ia=(\sum k|0 \leq k < i: n[k]*c[k]) \land 0 \leq i+1 \land i+1 \leq M \land 0 \leq i+1 \land i+1 \leq N  \land N=M$ \par 
+$\equiv  \qquad \langle Aritmetica \rangle$ \par 
+$\qquad sc=(\sum k|0 \leq k < i: c[k]) \land ia=(\sum k|0 \leq k < i: n[k]*c[k]) \land -1 \leq i \land i \leq M-1 \land -1 \leq i \land i \leq N-1  \land N=M$ \par
+$\Leftarrow  \qquad \langle a+1 \leq b \Rightarrow a \leq b \rangle$ \par 
+$\qquad sc=(\sum k|0 \leq k < i: c[k]) \land ia=(\sum k|0 \leq k < i: n[k]*c[k]) \land 0 \leq i \land i \leq M-1 \land 0 \leq i \land i \leq N-1  \land N=M$ \par 
+$\Leftarrow  \qquad \langle a \leq b \land a \neq b \Rightarrow a \leq b-1 \rangle$ \par 
+$\qquad sc=(\sum k|0 \leq k < i: c[k]) \land ia=(\sum k|0 \leq k < i: n[k]*c[k]) \land 0 \leq i \land i \leq M \land i \neq M \land 0 \leq i \land i \leq N \land i \neq N  \land N=M$ \par 
+$\equiv  \qquad \langle Sustitucion \; N=M \rangle$ \par 
+$\qquad sc=(\sum k|0 \leq k < i: c[k]) \land ia=(\sum k|0 \leq k < i: n[k]*c[k]) \land 0 \leq i \land i \leq N \land i \neq N  \land N=M$ \par 
+$\equiv  \qquad \langle a \leq b \land a \neq b \equiv a \leq b \land a < b \rangle$ \par 
+$\qquad sc=(\sum k|0 \leq k < i: c[k]) \land ia=(\sum k|0 \leq k < i: n[k]*c[k]) \land 0 \leq i \land i \leq N \land i < N  \land N=M$ \par 
+$\Leftarrow  \qquad \langle p \land q \Rightarrow p \rangle$ \par 
+$\qquad sc=(\sum k|0 \leq k < i: c[k]) \land ia=(\sum k|0 \leq k < i: n[k]*c[k]) \land 0 \leq i \land i < M \land 0 \leq i \land i < N \land i < N  \land N=M$ \par 
+$\equiv  \qquad \langle a \leq b <c \equiv a \leq b \land b < c \rangle$ \par 
+$\qquad sc=(\sum k|0 \leq k < i: c[k]) \land ia=(\sum k|0 \leq k < i: n[k]*c[k]) \land 0 \leq i \leq M \land 0 \leq i \leq N \land N=M \land i < N$ \par 
+
+Queda demostrado! \par 
+
+\newpage
+
+\subsection*{Prueba 2: $[P \land \neg B0 \Rightarrow Q]$}
+
+$sc=(\sum k|0 \leq k < i: c[k]) \land ia=(\sum k|0 \leq k < i: n[k]*c[k]) \land 0 \leq i \leq M \land 0 \leq i \leq N \land N=M \land i \geq N \Rightarrow \\
+sc=(\sum k|0 \leq k < M: c[k]) \land ia=(\sum k|0 \leq k < N: n[k]*c[k]) $ \par  
+
+
+Debilitamiento. \par 
+$\qquad sc=(\sum k|0 \leq k < i: c[k]) \land ia=(\sum k|0 \leq k < i: n[k]*c[k]) \land 0 \leq i \leq M \land 0 \leq i \leq N \land N=M \land i \geq N$\par 
+$\Rightarrow  \qquad \langle i \leq N \land i \geq N \Rightarrow i = N; Sustituvion \; N=M \rangle$ \par 
+$\qquad sc=(\sum k|0 \leq k < M: c[k]) \land ia=(\sum k|0 \leq k < N: n[k]*c[k]) \land 0 \leq i \leq M \land 0 \leq i \leq N \land N=M \land i \geq N$\par 
+$\Rightarrow  \qquad \langle p \land q \Rightarrow p \rangle$ \par 
+$\qquad sc=(\sum k|0 \leq k < M: c[k]) \land ia=(\sum k|0 \leq k < N: n[k]*c[k])$\par 
+
+QDP
+
+\newpage
+
+
+\subsection*{Prueba 3.1: $[P \land B0 \Rightarrow t \geq 0]$}
+
+$sc=(\sum k|0 \leq k < i: c[k]) \land ia=(\sum k|0 \leq k < i: n[k]*c[k]) \land 0 \leq i \leq M \land 0 \leq i \leq N \land N=M \land i < N \Rightarrow N-i \geq 0 $ \par 
+
+Debilitamiento. \par 
+
+$\qquad sc=(\sum k|0 \leq k < i: c[k]) \land ia=(\sum k|0 \leq k < i: n[k]*c[k]) \land 0 \leq i \leq M \land 0 \leq i \leq N \land N=M \land i < N $ \par 
+$\equiv  \qquad \langle Sustitucion \; N=M; a \leq b \leq c \equiv a \leq b \land b \leq c \rangle$ \par 
+$\qquad sc=(\sum k|0 \leq k < i: c[k]) \land ia=(\sum k|0 \leq k < i: n[k]*c[k]) \land 0 \leq i \land i \leq N \land N=M \land i < N $ \par 
+$\Rightarrow  \qquad \langle p \land q \Rightarrow p \rangle$ \par 
+$\qquad i \leq N $ \par 
+$\equiv  \qquad \langle Aritmetica \rangle$ \par 
+$\qquad N - i \geq 0 $ \par 
+
+QDP
+
+
+\newpage
+
+\subsection*{Prueba 3.2.a: $\{P \land B0 \land t = C\} S0 \{t < C\}$}
+
+$\{sc=(\sum k|0 \leq k < i: c[k]) \land ia=(\sum k|0 \leq k < i: n[k]*c[k]) \land 0 \leq i \leq M \land 0 \leq i \leq N \land N=M \land i < N \land N-i = C\} \\
+sc, i, ia := c[i]+sc, i + 1, ia+n[i]*c[i]\\
+\{N-i<C\} $ \par 
+
+Por regla de la asignación. \par 
+
+$sc=(\sum k|0 \leq k < i: c[k]) \land ia=(\sum k|0 \leq k < i: n[k]*c[k]) \land 0 \leq i \leq M \land 0 \leq i \leq N \land N=M \land i < N \land N-i = C \Rightarrow \\
+(N-i<C)(sc, i, ia := c[i]+sc, i + 1, ia+n[i]*c[i]) $ \par 
+
+Suposición del antecedente y empezando con el consecuente. \par 
+
+$\qquad (N-i<C)(sc, i, ia := c[i]+sc, i + 1, ia+n[i]*c[i])$ \par 
+$\equiv  \qquad \langle Sustitucion \; textual \rangle$ \par 
+$\qquad N-(i+1)<C$ \par 
+$\equiv  \qquad \langle Aritmetica \rangle$ \par 
+$\qquad N-i<C+1$ \par 
+$\equiv  \qquad \langle Hipotesis: \; N-i=C \rangle$ \par 
+$\qquad C<C+1$ \par 
+$\equiv  \qquad \langle Aritmetica \rangle$ \par 
+$\qquad true$ \par 
+
+QDP
+
+
+\end{document}
+
+
+
+

@@ -2,4 +2,6 @@
 *.log
 *.dvi
 *.synctex.gz
+*.out
+*.toc
 temp

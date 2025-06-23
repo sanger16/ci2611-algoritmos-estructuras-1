@@ -18,6 +18,9 @@
 \rfoot[CI2611 - Problemario]{CI2611 - Problemario}
 %\rfoot{\thepage}
 \doublespacing
+\usepackage{needspace}
+\usepackage{array}
+\usepackage{booktabs}
 %---
 %Customize
 \newcommand{\myparagraph}[1]{\paragraph{#1}\mbox{}\\}
@@ -28,10 +31,8 @@
 
 %--- No page break
 \newenvironment{absolutelynopagebreak}
-{\par\nobreak\vfil\penalty0\vfilneg
-	\vtop\bgroup}
-{\par\xdef\tpd{\the\prevdepth}\egroup
-	\prevdepth=\tpd}
+{\Needspace{10\baselineskip}\begin{quote}}
+		{\end{quote}}
 %---
 
 \title{CI2611 - Algoritmos y estructuras I \\ Parcial 2}
@@ -65,22 +66,157 @@
 	\item Reemplazo de constantes por variables.\par
 	      A partir de una postcondición de la forma: $r = F(N)$\par
 	      Es posible elegir:\par
-	      Inv: $r = F(x)$\par
+	      Inv: $r = F(x) \land 0 \leq x \leq N$\par
 	      El programa resultante.\par
 	      \begin{absolutelynopagebreak}
-		      $\{Inv: r = F(x)\}$\par
+		      $\{Inv: r = F(x) \land 0 \leq x \leq N\}$\par
 		      $\qquad S$\par
 		      $\{r = F(N)\}$\par
 	      \end{absolutelynopagebreak}
 	\item Fortalecimiento de invariantes.\par
+	      A partir de una postcondición de la forma: $r = F(N)$\par
+	      Es posible elegir:\par
+	      Inv: $r = F(x)$\par
+	      Cuando la función $F(x)$ es difícil de calcular en una sola iteración se debe
+	      determinar una función $G(x)$ tal que cumpla.\par
+	      $r = F(x) \otimes G(x)$, donde $\otimes$ representa la operación que une a las expresiones $F$ y $G$.\par
+	      Y podemos fortalecer el invariante con un nuevo predicado.\par
+	      $s = G(x)$\par
+	      De manera que r se vuelve recursiva.\par
+	      $r = r \otimes s$\par
+	      Finalmente el invariante queda.\par
+	      $r = F(x) \land 0 \leq x < N \land s = G(x)$\par
+	      En este punto si $G(x)$ sigue siendo difícil de computar en una sola iteración,
+	      entonces se debe aplicar el mismo procedimiento de forma recurrente hasta
+	      alcanzar una expresión fácil de calcular en una iteración.\par
 \end{enumerate}
 
 \subsection{Arreglos}\par
 
-\subsection{Procedimientos}\par 
+Notación declaración de arreglos:\par
+$a: array \; [p..q) \; of \; t$, donde t es el tipo de dato de cada elemento\par
+$a: array \; [p..q) \; of \; array \; [r..s) \; of \; t$, Matríz\par
+$a: array \; [p..q) \times [r..s) \; of \; t$, Matríz\par
+
+\textbf{Regla de asignación.}\par
+
+$\{P\} \; a[E] := F \; \{Q\}$, con $a: array [p..q) \; of \; t$ se traduce matemáticamente en:\par
+
+\begin{equation}
+	a[i: E][j] =
+	\begin{cases}
+		a[j] & \text{si } i \neq j \\
+		E    & \text{si } i = j
+	\end{cases}
+\end{equation} \par
+
+\textbf{Regla de correctitud para la asignación.}\par
+$\{P\} \; a[E] := F \; \{Q\} \iff [P \Rightarrow p \leq E < q \land Q(a := a(E: F))]$\par
+
+\textbf{Regla de correctitud para el intercambio de elementos en un arreglo.}\par
+$\{P\} \; Intercambio(a,E,F) \; \{Q\} \iff [P \Rightarrow p \leq E < q \land p \leq F < q \land Q(a := a(E, F: a[F], a[E]))]$\par
+
+\subsection{Procedimientos}\par
+Notación:\par
+\begin{absolutelynopagebreak}
+	$\textbf{proc} \; <nombre\_procedimiento>(<parametro1>; <parametro2>; \dots; <parametroN>)$ \par
+	$\quad \{precondicion: P\}$ \par
+	$\quad \{postcondicion: Q\}$\par
+	$\qquad S$\par
+\end{absolutelynopagebreak}
+
+Donde, $<parametro> = <tipo \; parametro> \; <nombre\_variable: tipo>$\par
+y $<tipo \; parametro>$ puede ser: in (entrada), in-out (entrada-salida), out
+(salida).\par
+
+\vspace{2em}
+
+\textbf{Definición procedimiento general.}\par
+
+\begin{absolutelynopagebreak}
+	$\textbf{proc} \; p \; (in \; x; \; in-out \; y; \; out \; z)$ \par
+	$\quad \{P_{def}\}$ \par
+	$\quad \{Q_{def}\}$\par
+	$\qquad S$\par
+\end{absolutelynopagebreak}
+
+\textbf{Correctitud de la llamada a procedimientos.}\par
+\textit{Nota: En este resumen solo se plasmará el caso general que en la literatura es}
+conocido como el caso B2.\par
+Con el procedimiento p definido anteriormente se desea probar la siguiente
+tripleta.\par
+\begin{center}
+	$\{P_{llam}\} \; p(E, a, b) \; \{Q_{llam}\}$
+\end{center}\par
+Para lo cual se deben cumplir los siguientes predicados.\par
+$1.[P_{llam} \Rightarrow P_{def}(x,y := E, a)]$\par
+$2.[P_{llam}(a,b := A,B) \land Q_{def}(x,y_0,y,z := E, A, a, b) \Rightarrow Q_{llam}]$\par
+
+Donde $A,B$ son los valores iniciales de los argumentos de entrada-salida y
+salida respectivamente y son constantes cualquieras dentro de la demostración.\par
+
+Dado que un procedimiento puede tener múltiples parámetros de entrada,
+entrada-salida y salida, tanto los parámetros $x,y,z$ como los argumentos
+$E,a,b$ represnetan una lista y no una única variable, bajo la misma
+justificación las constantes $A,B$ represnetan una lista de constantes de los
+estados de los argumentos de entradas-salida y salida, respectivamente.\par
 
 \subsection{Funciones}\par
+Notación:\par
+\begin{absolutelynopagebreak}
+	$\textbf{func} \; f(<param1>; <param2>; \dots; <paramN>) \rightarrow tipoRetorno$ \par
+	$\quad \{precondicion: P\}$ \par
+	$\quad \{postcondicion: Q\}$\par
+	$\quad [$\par
+			$\qquad I;$\par
+			$\qquad >> E$\par
+			$\quad ]$\par
+\end{absolutelynopagebreak}
 
+Donde $I$ representa el conjunto de instrucciones que ejecuta la función y $E$
+representa el valor retornado.\par
+
+\textbf{Correctitud de funciones.}\par
+Para probar una función es necesario traducir la función a un procedimiento.\par
+
+\begin{absolutelynopagebreak}
+	$\textbf{proc} \; pf(<param1>; <param2>; \dots; <paramN>; out \; \theta: tipoRetorno)$ \par
+	$\quad \{precondicion: P\}$ \par
+	$\quad \{postcondicion: Q\}$\par
+	$\quad [$\par
+			$\qquad I;$\par
+			$\qquad \theta := E$\par
+			$\quad ]$\par
+\end{absolutelynopagebreak}
+
+Donde, $\theta$ es el parámetro que representa a una variable en el cuerpo del
+programa principal que pasará como argumento durante la llamada del nuevo
+procedimiento y recibirá el valor de retorno de la función definida
+originalmente.\par
+
+\textbf{Algunos ejemplos.}\par
+
+\begingroup
+\setlength\tabcolsep{3pt}
+\small
+\begin{tabular}{b{2in}c  b{2in}r}
+	\toprule
+	{\bfseries Función}                                                      &  & {\bfseries Procedimiento}                                                                                         \\
+	\midrule
+	$x := 3*(f(a) + b)$                                                      &  & $pf(a,\phi); \; x := 3*(\phi + b)$                                                                                \\
+	\midrule
+	$if \; f(a) \geq 0 \rightarrow b$\newline $[\;] f(b) \leq 0 \rightarrow c$ &  & $pf(a, \phi);pf(b,\omega)$ \newline $if \; \phi \geq 0 \rightarrow b$\newline $[\;] \omega \leq 0 \rightarrow c$    \\
+	\midrule
+	$do \; n - f(i) > 0 \rightarrow \dots $\newline $\dots$ \newline $od$    &  & $pf(i, \theta);$ \newline $do \; n - \theta > 0 \rightarrow \dots $\newline $\dots; pf(i,\theta)$ \newline $od$ & \\
+	\midrule
+\end{tabular}
+\endgroup
+
+\newpage
+\vspace*{\fill}
+	\hspace*{\fill} --- PROBLEMAS RESUELTOS --- \hspace*{\fill}
+\vspace*{\fill}
+\thispagestyle{empty}
 \newpage
 
 \section{Derivación de Invariantes}
@@ -98,7 +234,7 @@ $\quad const A: array \; [0..N) \; of \; int$\par
 $\quad var \; r: int$\par
 $\quad \{N \geq 1\}$\par
 \hspace{1em} S \par
-$\quad \{r =(max \; p,q| \; 0 \leq p < q < N : A[p] - A[q])\}$ \par
+$\quad \{r =(\max \; p,q| \; 0 \leq p < q < N : A[p] - A[q])\}$ \par
 ]
 
 \newpage
@@ -115,12 +251,12 @@ $\quad \{r =(max \; p,q| \; 0 \leq p < q < N : A[p] - A[q])\}$ \par
 	\item Guarda $x<N$
 	\item Se verifica la actualización de r en $x+1$ \par
 	      $ \qquad (\max \; p,q| \; 0 \leq p < q < x+1 : A[p] - A[q])$ \par
-	      $\equiv  \qquad \langle Ultimo \; termino \rangle$ \par
-	      $ \qquad (\max \; p,q| \; 0 \leq p < q < x : A[p] - A[q]) \; max \; (max \; p| \; 0 \leq p < x : A[p] - A[x])$ \par
+	      $\equiv  \qquad \langle Ultimo \; termino: \; q = x \rangle$ \par
+	      $ \qquad (\max \; p,q| \; 0 \leq p < q < x : A[p] - A[q]) \; \max \; (\max \; p| \; 0 \leq p < x : A[p] - A[x])$ \par
 	      $\equiv  \qquad \langle P0 \rangle$ \par
-	      $ \qquad r \; max \; (\max \; p| \; 0 \leq p < x : A[p] - A[x])$ \par
+	      $ \qquad r \; \max \; (\max \; p| \; 0 \leq p < x : A[p] - A[x])$ \par
 	      $\equiv  \qquad \langle  \;$ Distributividad - sobre max $\rangle$ \par
-	      $ \qquad r \; max \; ((\max \; p| \; 0 \leq p < x : A[p]) - A[x])$ \par
+	      $ \qquad r \; \max \; ((\max \; p| \; 0 \leq p < x : A[p]) - A[x])$ \par
 
 	\item Introducimos una nueva variable \par
 	      $ \qquad s = (\max \; p| \; 0 \leq p < x : A[p])$ \par
@@ -131,17 +267,17 @@ $\quad \{r =(max \; p,q| \; 0 \leq p < q < N : A[p] - A[q])\}$ \par
 	      \end{center}
 	      La actualización de r queda como sigue.\par
 	      \begin{center}
-		      $r = r \; max \; (s - A[x])$
+		      $r = r \; \max \; (s - A[x])$
 	      \end{center}
 	\item Ahora evaluamos la actualizacion de s en $x+1$ \par
 	      $ \qquad (\max \; p| \; 0 \leq p < x+1 : A[p])$ \par
 	      $\equiv  \qquad \langle Ultimo \; termino \rangle$ \par
-	      $ \qquad (\max \; p| \; 0 \leq p < x : A[p]) \; max \; A[x]$ \par
+	      $ \qquad (\max \; p| \; 0 \leq p < x : A[p]) \; \max \; A[x]$ \par
 	      $\equiv  \qquad \langle Q \rangle$ \par
-	      $ \qquad s \; max \; A[x]$ \par
+	      $ \qquad s \; \max \; A[x]$ \par
 	      La actualización de s queda: \par
 	      \begin{center}
-		      $ s = s \; max \; A[x]$ \par
+		      $ s = s \; \max \; A[x]$ \par
 	      \end{center}
 
 \end{enumerate}
@@ -153,13 +289,13 @@ $\quad const \; A: array \; [0..N) \; of \; int;$\par
 $\quad var \; r,s,x: int;$\par
 $\quad \{N \geq 1\}$\par
 $\quad x,r,s := 0,-\infty,-\infty $ \par
-$\quad \{Inv: r =(max \; p,q| \; 0 \leq p < q < x : A[p] - A[q]) \land 0 \leq x \leq N \land s = (max \; p| \; 0 \leq p < x : A[p])\} \{Cota: N-x\}$\par
+$\quad \{Inv: r =(\max \; p,q| \; 0 \leq p < q < x : A[p] - A[q]) \land 0 \leq x \leq N \land s = (\max \; p| \; 0 \leq p < x : A[p])\} \newline \{Cota: N-x\}$\par
 \hspace{1em} do $x < N \rightarrow$ \par
-$\qquad r = r \; max \; (s - A[x]);$ \par
-$\qquad s = s \; max \; A[x];$ \par
+$\qquad r = r \; \max \; (s - A[x]);$ \par
+$\qquad s = s \; \max \; A[x];$ \par
 $\qquad x = x+1$ \par
 \hspace{1em} od \par
-$\quad \{r =(max \; p,q| \; 0 \leq p < q < N : A[p] - A[q])\}$ \par
+$\quad \{r =(\max \; p,q| \; 0 \leq p < q < N : A[p] - A[q])\}$ \par
 ]\par
 
 \newpage
@@ -241,27 +377,29 @@ $\quad \{r \equiv (\exists \; p| \; 0 \leq p \leq N : (\forall i \;|\; 0 \leq i 
 
 \end{enumerate}
 
-Programa: \par
-[\par
-$\quad const N: int;$\par
-$\quad const A: array \; [0..N) \; of \; bool;$\par
-$\quad var \; r,s,x: bool$\par
-$\quad \{N \geq 0\}$\par
-$\quad x,r,s := 0,true,true $ \par
-$\quad \{Inv: r \equiv (\exists \; p| \; 0 \leq p \leq x : (\forall i \;|\; 0 \leq i < p:A[i]) \land (\forall i \;|\; p \leq i < x: \neg A[i])) \land s \equiv (\forall i \;|\; 0 \leq i < x:A[i]) \land 0 \leq x \leq N \} \{Cota: N-x\}$\par
-\hspace{1em} do $x \neq N \rightarrow$ \par
-$\qquad r \equiv (r \lor (s \land A[x])) \land \neg A[x];$ \par
-$\qquad s \equiv s \land A[x];$ \par
-$\qquad x = x+1$ \par
-\hspace{1em} od \par
-$\quad \{r \equiv (\exists \; p| \; 0 \leq p \leq N : (\forall i \;|\; 0 \leq i < p:A[i]) \land (\forall i \;|\; p \leq i < N: \neg A[i]))\}$ \par
-]\par
+\begin{absolutelynopagebreak}
+	Programa: \par
+	[\par
+	$\quad const \; N: int;$\par
+	$\quad const \; A: array \; [0..N) \; of \; bool;$\par
+	$\quad var \; r,s,x: bool$\par
+	$\quad \{N \geq 0\}$\par
+	$\quad x,r,s := 0,true,true $ \par
+	$\quad \{Inv: r \equiv (\exists \; p| \; 0 \leq p \leq x : (\forall i \;|\; 0 \leq i < p:A[i]) \land (\forall i \;|\; p \leq i < x: \neg A[i])) \land s \equiv (\forall i \;|\; 0 \leq i < x:A[i]) \land 0 \leq x \leq N \} \{Cota: N-x\}$\par
+	\hspace{1em} do $x \neq N \rightarrow$ \par
+	$\qquad r \equiv (r \lor (s \land A[x])) \land \neg A[x];$ \par
+	$\qquad s \equiv s \land A[x];$ \par
+	$\qquad x = x+1$ \par
+	\hspace{1em} od \par
+	$\quad \{r \equiv (\exists \; p| \; 0 \leq p \leq N : (\forall i \;|\; 0 \leq i < p:A[i]) \land (\forall i \;|\; p \leq i < N: \neg A[i]))\}$ \par
+	]\par
+\end{absolutelynopagebreak}
 
 \newpage
 
 % ************* Start Exercise ******************
 
-\subsection{Parcial 1 Ene-Mar 2025}
+\subsection{Parcial 2 Ene-Mar 2025}
 
 \subsubsection{Ejercicio 4}
 Sea las funciones F y G. \par
@@ -324,13 +462,13 @@ Sea las funciones F y G. \par
 	      \end{center}
 
 	\item Se verifica la actualización de s en $n+1$. \par
-	      $\qquad s = G(n+1)$ \par
+	      $\qquad G(n+1)$ \par
 	      = $\qquad \langle$ Definición de G $\rangle$\par
-	      $\qquad s = G(n+1-1)+7$ \par
+	      $\qquad G(n+1-1)+7$ \par
 	      = $\qquad \langle$ Aritmética $\rangle$\par
-	      $\qquad s = G(n)+7$ \par
+	      $\qquad G(n)+7$ \par
 	      = $\qquad \langle Q \rangle$\par
-	      $\qquad s = s+7$ \par
+	      $\qquad s+7$ \par
 
 	      Actualización de s.
 	      \begin{center}
@@ -388,8 +526,8 @@ Derive programa. \par
 	      $\quad (\sum i| 0\leq i < x :2^i) + 2^x$ \par
 	      $\equiv \quad \langle P0 \rangle$ \par
 	      $\quad s + 2^x$ \par
-	\item Dado que el calculo de $2^x$ no e sposible hacerlo en una solo iteración se
-	      propone la siguiente variable. \par
+	\item Dado que el calculo de $2^x$ no es posible hacerlo en una solo iteración se
+	      propone la siguiente expresión. \par
 	      $ r = 2^x$ \par
 	      Si $x = 0 \Rightarrow r = 1$ \par
 	      De esta manera se puede fortalecer el invariante con el predicado a
@@ -416,21 +554,21 @@ Derive programa. \par
 
 \end{enumerate}
 
-\newpage
+\begin{absolutelynopagebreak}
+	Programa final.\par
 
-Programa final. \par
-
-[\par
-	$\quad const N: int;$\par
-	$\quad var \; s,r,x: int$\par
-	$\quad\{N > 0\}$\par
-	$\quad x,s,r := 0,0,1;$\par
-	$\quad\{inv: s = (\sum i| 0\leq i < x :2^i) \land r = 2^x \land 0 \leq x \leq N\}\{cota: N-x\}$\par
-	$\quad do \; x < N \rightarrow $ \par
-	$\qquad s,r = s + r,2r $ \par
-	$\quad od $ \par
-	$\quad \{s = (\sum i| 0\leq i < N :2^i)\}$ \par
-]
+	[\par
+		$\quad const N: int;$\par
+		$\quad var \; s,r,x: int$\par
+		$\quad\{N > 0\}$\par
+		$\quad x,s,r := 0,0,1;$\par
+		$\quad\{inv: s = (\sum i| 0\leq i < x :2^i) \land r = 2^x \land 0 \leq x \leq N\}\{cota: N-x\}$\par
+		$\quad do \; x < N \rightarrow $ \par
+		$\qquad s,r = s + r,2r $ \par
+		$\quad od $ \par
+		$\quad \{s = (\sum i| 0\leq i < N :2^i)\}$ \par
+	]
+\end{absolutelynopagebreak}
 
 \newpage
 
@@ -502,20 +640,24 @@ Programa final. \par
 
 \newpage
 
-Programa derivado. \par
+\begin{absolutelynopagebreak}
+	Programa derivado.\par
 
-[\par
-	$\quad const \; N: int;$\par
-	$\quad const \; X: float;$\par
-	$\quad var \; s,r: float$\par
-	$\quad var \; n: int$\par
-	$\quad\{N > 0\}$\par
-	$\quad\{inv: s = (\sum i| 0\leq i < n : \frac{X^i}{i!}) \land r = \frac{X^n}{n!} \cdot r \land 0 < n \leq N \}\{cota: N-n\}$\par
-	$\quad do \; n < N \rightarrow $ \par
-	$\qquad s,r = s + r,\frac{X}{(n+1)} \cdot r $ \par
-	$\quad od $ \par
-	$\quad \{s = (\sum i| 0 < i < N : \frac{X^i}{i!})\}$ \par
-]
+	[\par
+		$\quad const \; N: int;$\par
+		$\quad const \; X: float;$\par
+		$\quad var \; s,r: float$\par
+		$\quad var \; n: int$\par
+		$\quad\{N > 0\}$\par
+		$\quad\{inv: s = (\sum i| 0\leq i < n : \frac{X^i}{i!}) \land r = \frac{X^n}{n!} \cdot r \land 0 < n \leq N \}\{cota: N-n\}$\par
+		$\quad do \; n < N \rightarrow $ \par
+		$\qquad s,r = s + r,\frac{X}{(n+1)} \cdot r $ \par
+		$\quad od $ \par
+		$\quad \{s = (\sum i| 0 < i < N : \frac{X^i}{i!})\}$ \par
+	]
+\end{absolutelynopagebreak}
+
+
 
 \newpage
 
@@ -526,7 +668,7 @@ Programa derivado. \par
 [\par
 $\quad const $\par
 $\qquad N: int;$\par
-$\qquad S: array[0..N*) of int;$\par
+$\qquad S: array[0..N) \; of \; int;$\par
 $\quad var \; r: int$\par
 $\quad\{N \geq 0\}$\par
 $\quad Programa $ \par
@@ -552,7 +694,7 @@ $\quad \{r = (\# i,j| 0\leq i < j < N :S[i] \leq 0 \land S[j] \geq 0)\}$ \par
 	      $\equiv \quad \langle$ P0 $\rangle$ \par
 	      $\quad r + (\# i| 0\leq i < x :S[i] \leq 0 \land S[x] \geq 0)$ \par
 
-	      Dado que en el cuerpo del cuantificador se tiene la presnecia de la variable x
+	      Dado que en el cuerpo del cuantificador se tiene la presencia de la variable x
 	      en una expresión lógica, se debe analizar por casos.
 
 	      $\equiv \quad \langle$ Casos $\rangle$ \par
@@ -584,11 +726,13 @@ $\quad \{r = (\# i,j| 0\leq i < j < N :S[i] \leq 0 \land S[j] \geq 0)\}$ \par
 
 	\item Se verifica la actualización de s en x+1. \par
 	      $\quad (\# i| 0\leq i < x+1 :S[i] \leq 0)$ \par
-	      $\equiv \quad \langle$ Último término por casos con $ i = x \rangle$ \par
+	      $\equiv \quad \langle$ Último término con $ i = x \rangle$ \par
+	      $\quad (\# i| 0\leq i < x :S[i] \leq 0) + (\# i| i = x :S[i] \leq 0)$ \par
+	      $\equiv \quad \langle$ Por casos $\rangle$ \par
 	      \begin{equation}
 		      \begin{cases}
 			      (\# i| 0\leq i < x :S[i] \leq 0)     & \text{si } S[x] > 0    \\
-			      (\# i| 0\leq i < x :S[i] \leq 0) + 1 & \text{si } s[x] \leq 0
+			      (\# i| 0\leq i < x :S[i] \leq 0) + 1 & \text{si } S[x] \leq 0
 		      \end{cases}
 	      \end{equation} \par
 	      $\equiv \quad \langle$ Q $ \rangle$ \par
@@ -617,19 +761,19 @@ Programa final. \par
 [\par
 $\quad const $\par
 $\qquad N: int;$\par
-$\qquad S: array[0..N*) of int;$\par
+$\qquad S: array[0..N) \; of \; int;$\par
 $\quad var \; r, s, x: int$\par
 $\quad\{N \geq 0\}$\par
 $\quad r, s, x := 0,0,0;$\par
 $\quad\{inv: r = (\# i,j| 0\leq i < j < x :S[i] \leq 0 \land S[j] \geq 0) \land s = (\# i| 0\leq i < x :S[i] \leq 0) \land 0 \leq x \leq N\}\{cota: N-x\}$\par
 $\quad do \; x < N \rightarrow $ \par
-$\qquad if S[x] < 0 \rightarrow $ \par
+$\qquad if \; S[x] < 0 \rightarrow $ \par
 $\qquad \quad r = r; $ // Es posible eliminar \par
 $\qquad \quad s = s+1; $ \par
-$\qquad [] S[x] > 0 \rightarrow $ \par
+$\qquad [\;] \; S[x] > 0 \rightarrow $ \par
 $\qquad \quad r = r+s; $ \par
 $\qquad \quad s = s; $ // Es posible eliminar \par
-$\qquad [] S[x] = 0 \rightarrow $ \par
+$\qquad [\;] \; S[x] = 0 \rightarrow $ \par
 $\qquad \quad r = r+s; $ \par
 $\qquad \quad s = s+1; $ \par
 $\qquad fi $ \par
@@ -688,7 +832,7 @@ $\quad var \; A : array \; [0..M)x[0..N) \; of \; int$; \par
 $\quad const \; N, M : int$; \par
 $\quad var \; A : array \; [0..M)x[0..N) \; of \; int$; \par
 		$\quad var \; i,j, enum : int$; \par
-		$\quad i, j, enum := M, 0, 0 $ \par
+		$\quad j, enum := 0, 0 $ \par
 		$\quad do \; j < N \rightarrow $ \par
 		$\qquad if \; j \mod 2 = 0 \rightarrow $ \par
 		$\qquad \quad i = M-1 $ \par
@@ -697,14 +841,15 @@ $\quad var \; A : array \; [0..M)x[0..N) \; of \; int$; \par
 		$\qquad \quad \quad enum := enum + 1; $ \par
 		$\qquad \quad \quad i := i - 1 $ \par
 		$\qquad \quad od $ \par
-		$\qquad [] \; j \mod 2 \; != 0 \rightarrow $ \par
+		$\qquad [\;] \; j \mod 2 \; != 0 \rightarrow $ \par
 		$\qquad \quad i = 0 $ \par
 		$\qquad \quad do \; i < M \rightarrow $ \par
 		$\qquad \quad \quad A[i][j] := enum; $ \par
 		$\qquad \quad \quad enum := enum + 1; $ \par
 		$\qquad \quad \quad i := i + 1 $ \par
 		$\qquad \quad od $ \par
-		$\qquad fi $; \par
+		$\qquad if $; \par
+		$\qquad j = j + 1 $; \par
 		$\quad od$ \par
 	] \par
 
@@ -759,7 +904,7 @@ $\equiv \quad \langle$ Sustitución textual $ \rangle$\par
 $\quad p \leq i < q \land p \leq j < q \land A(i:(A[i]+A[j]))[i] = X + Y$\par
 $\equiv \quad \langle$ Asignación de Arreglo $ i = j \Rightarrow a[i:E][j] = E \rangle$\par
 $\quad p \leq i < q \land p \leq j < q \land A[i]+A[j] = X + Y$\par
-$\Rightarrow \quad \langle$ Hipótesis $ A[i] = X \land A[j] = Y \Rightarrow p \leq i < q \land p \leq j < q \rangle$\par
+$\equiv \quad \langle$ Hipótesis $ A[i] = X \land A[j] = Y \equiv true \Rightarrow p \leq i < q \land p \leq j < q \rangle$\par
 $\quad true \land true \land A[i]+A[j] = X + Y$\par
 $\equiv \quad \langle$ Hipótesis $ A[i] = X \land A[j] = Y \; Sustitucion \rangle$\par
 $\quad  X + Y = X + Y$\par
@@ -794,7 +939,7 @@ $\equiv \quad \langle$ Sustitución Textual $ \rangle$\par
 $\quad (\forall i : 0 \leq i < k : A(k : 2^k)[i] = 2^i) \land 0 \leq k \leq N$\par
 $\equiv \quad \langle$ Definición Asignación de arreglos $ k \neq i \Rightarrow A(k : 2^k)[i] = A[i] \rangle$\par
 $\quad (\forall i : 0 \leq i < k : A[i] = 2^i) \land 0 \leq k \leq N$\par
-$\equiv \quad \langle$ Hipótesis $ k (\forall i : 0 \leq i < k : A[i] = 2^i) \land 0 \leq k \leq N \rangle$\par
+$\equiv \quad \langle$ Hipótesis $ (\forall i : 0 \leq i < k : A[i] = 2^i) \land 0 \leq k \leq N \rangle$\par
 $\quad true $\par
 $\blacksquare$\par
 
@@ -843,7 +988,7 @@ $\blacksquare$\par
 \subsection{Caso general B2 (Teoría)}
 
 $\neg ocurreLibre('a,b', E) \equiv false$ \par
-$proc \; p \; (entrada \; x; entrada-salida \; y; salida \; z) $ \par
+$proc \; p \; (entrada \; x; \; entrada-salida \; y; \; salida \; z) $ \par
 $\quad \{P_{def}\}$ \par
 $\quad \{Q_{def}\}$ \par
 $\quad S$ \par
@@ -936,6 +1081,7 @@ Demostraando las expresiones: \par
 	      $\qquad p[0] \geq 73 \land P[0]=0 \land p[0] = a$ \par
 	      $\Rightarrow \qquad \langle$ Debilitamiento $ p \land q \Rightarrow p \rangle$ \par
 	      $\qquad p[0] \geq 73 $ \par
+		  $\blacksquare$
 \end{enumerate}
 
 \newpage
@@ -944,20 +1090,75 @@ Demostraando las expresiones: \par
 
 \subsubsection{Ejercicio Examen Ene-Mar 2025}
 
-Dado el procedimiento. \par
-$proc \; intercambiar \; (entrada \; i,N:int; entrada-salida \; a,b: \; array[0..N) \; de \; int) $ \par
-$\quad \{Pre: N > 0 \land 0 \leq i < N\}$ \par
-$\quad \{Post: a[i] = b_0[i] \land b[i] = a_0[i]\}$ \par
+Dado el procedimiento.\par
+$proc \; intercambiar \; \; (entrada \; i,N:int; \; entrada-salida \; a,b: \; array[0..N) \; de \; int) $\par
+$\quad \{Pre: N > 0 \land 0 \leq i < N\}$\par
+$\quad \{Post: a[i] = b_0[i] \land b[i] = a_0[i]\}$\par
 
-Demostrar la correctitud. \par
+Demostrar la correctitud.\par
 
-$\{M > 5 \land p[0] > -1 \land a[0] > 3 \land p[0] + a[0] = X \land X < 3 \land a[x] = C\}$ \par
-$\quad intercambiar(p[0]+a[0],M,p,a)$ \par
+$\{M > 5 \land p[0] > -1 \land a[0] > 3 \land p[0] + a[0] = X \land X < 3 \land a[x] = C\}$\par
+$\quad intercambiar(p[0]+a[0],M,p,a)$\par
 $\{p[X] = C\}$ \par
 
 \vspace{2em}
 
-\textbf{Demostración:}\par \textcolor{red}{Está en papel!˙}
+\textbf{Demostración:}\par
+
+$1. [P_{llam} \Rightarrow P_{def}(x,y := E,a)]$\par
+$2.m[P_{llam}(a,b := A,B) \land Q_{def}(x,y_0,y,z := E,A,a,b) \Rightarrow Q_{llam}]$\par
+
+\hspace{4em} $parameter \rightarrow argumentos$\par
+
+Entradas: $i,N \rightarrow p[0] + a[0],M$\par
+Entrada-Salida: $a,b \rightarrow p,a$\par
+Valores iniciales: $b_0, a_0$\par
+
+Las pruebas a realizar quedan:\par
+$1. [P_{llam} \Rightarrow P_{def}(i,N,a,b := p[0] + a[0],M, p,a)]$\par
+$2. [P_{llam}(p,a := P,A) \land Q_{def}(i,N,a_0,b_0,a,b := (p[0] + a[0])(p,a := P,A),M,P, A, p, a) \Rightarrow Q_{llam}]$\par
+
+Sustituyendo los predicados.\par
+$1. [M > 5 \land p[0] > -1 \land a[0] > 3 \land p[0] + a[0] = X \land X < 3 \land a[x] = C \Rightarrow \\
+ (N > 0 \land 0 \leq i < N)(i,N,a,b := p[0] + a[0],M, p,a)]$\par
+$2. [(M > 5 \land p[0] > -1 \land a[0] > 3 \land p[0] + a[0] = X \land X < 3 \land a[x] = C)(p,a := P,A) \land (a[i] = b_0[i] \land b[i] = a_0[i])(i,N,a_0,b_0,a,b := (p[0] + a[0])(p,a := P,A),M,P, A, p, a) \Rightarrow p[X] = C]$\par
+
+Demostración 1.\par
+$M > 5 \land p[0] > -1 \land a[0] > 3 \land p[0] + a[0] = X \land X < 3 \land a[x] = C \Rightarrow \\
+ (N > 0 \land 0 \leq i < N)(i,N,a,b := p[0] + a[0],M, p,a)$\par
+ Aplicando sustitución textual.\par
+ $M > 5 \land p[0] > -1 \land a[0] > 3 \land p[0] + a[0] = X \land X < 3 \land a[x] = C \Rightarrow M > 0 \land 0 \leq p[0] + a[0] < M$\par
+
+Por debilitamiento.\par
+$\qquad M > 5 \land p[0] > -1 \land a[0] > 3 \land p[0] + a[0] = X \land X < 3 \land a[x] = C$\par
+$\Rightarrow \qquad \langle a > b \land c > d \Rightarrow a + c > b + d \rangle$\par
+$\qquad M > 5 \land p[0] + a[0] > 2 \land p[0] + a[0] = X \land X < 3 \land a[x] = C$\par
+$\equiv \qquad \langle $Sustitución$ p[0] + a[0] = X \rangle$\par
+$\qquad M > 5 \land X > 2 \land p[0] + a[0] = X \land X < 3 \land a[x] = C$\par
+$\Rightarrow \qquad \langle $Debilitamiento$ p \land q \Rightarrow p \rangle$\par
+$\qquad X > 2 \land X < 3 $\par
+$\equiv \qquad \langle $Rango vacío$ \rangle$\par
+$\qquad false $\par
+$\equiv \qquad \langle false \Rightarrow p \equiv true \rangle$\par
+$\qquad M > 0 \land 0 \leq p[0] + a[0] < M $\par
+$\blacksquare $\par
+
+Demostración 2.\par
+$(M > 5 \land p[0] > -1 \land a[0] > 3 \land p[0] + a[0] = X \land X < 3 \land a[X] = C)(p,a := P,A) \land (a[i] = b_0[i] \land b[i] = a_0[i])(i,N,a_0,b_0,a,b := (p[0] + a[0])(p,a := P,A),M,P, A, p, a) \Rightarrow p[X] = C$\par
+
+Aplicando debilitamiento.\par
+$\qquad (M > 5 \land p[0] > -1 \land a[0] > 3 \land p[0] + a[0] = X \land X < 3 \land a[X] = C)(p,a := P,A) \land (a[i] = b_0[i] \land b[i] = a_0[i])(i,N,a_0,b_0,a,b := (p[0] + a[0])(p,a := P,A),M,P, A, p, a)$\par
+$\equiv \qquad \langle$ S.T $p,a := P,A\rangle$\par
+$\qquad M > 5 \land P[0] > -1 \land A[0] > 3 \land P[0] + A[0] = X \land X < 3 \land A[X] = C \land (a[i] = b_0[i] \land b[i] = a_0[i])(i,N,a_0,b_0,a,b := (p[0] + a[0])(p,a := P,A),M,P, A, p, a)$\par
+$\equiv \qquad \langle$ S.T $\rangle$\par
+$\qquad M > 5 \land P[0] > -1 \land A[0] > 3 \land P[0] + A[0] = X \land X < 3 \land A[X] = C \land p[P[0] + A[0]] = A[P[0] + A[0]] \land a[P[0] + A[0]] = P[P[0] + A[0]]$\par
+$\equiv \qquad \langle$ S.T $P[0] + A[0] = X\rangle$\par
+$\qquad M > 5 \land P[0] > -1 \land A[0] > 3 \land P[0] + A[0] = X \land X < 3 \land A[X] = C \land p[X] = A[X] \land a[X] = P[X]$\par
+$\equiv \qquad \langle$ S.T $A[X] = C\rangle$\par
+$\qquad M > 5 \land P[0] > -1 \land A[0] > 3 \land P[0] + A[0] = X \land X < 3 \land A[X] = C \land p[X] = C \land a[X] = P[X]$\par
+$\Rightarrow \qquad \langle$ Debilitamiento $p \land q \Rightarrow p\rangle$\par
+$\qquad p[X] = C $\par
+$\blacksquare $\par
 
 \newpage
 
