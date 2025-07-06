@@ -1,5 +1,6 @@
 \documentclass[hidelinks]{article}
 %Packages
+%\usepackage{fontawesome}
 \usepackage{amsmath}
 \usepackage{amssymb}
 %\usepackage{mathabx}
@@ -15,12 +16,14 @@
 \usepackage{framed}
 \usepackage{fancyhdr}
 \pagestyle{fancy}
-\rfoot[CI2611 - Problemario]{CI2611 - Problemario}
+\setlength{\headheight}{13.07225pt}
+\rfoot[CI2611 - Problemario]{CI2611 - Problemario - p2}
 %\rfoot{\thepage}
 \doublespacing
 \usepackage{needspace}
 \usepackage{array}
 \usepackage{booktabs}
+\usepackage{indentfirst}
 %---
 %Customize
 \newcommand{\myparagraph}[1]{\paragraph{#1}\mbox{}\\}
@@ -35,7 +38,7 @@
 		{\end{quote}}
 %---
 
-\title{CI2611 - Algoritmos y estructuras I \\ Parcial 2}
+\title{CI2611 - Algoritmos y estructuras I \\ Parcial 2 }%\\ \href{https://github.com/your-username/your-repo}{\faGithub}}
 \date{Abr-Jul 2025}
 \author{Daniel Delgado}
 \begin{document}
@@ -150,7 +153,7 @@ tripleta.\par
 \end{center}\par
 Para lo cual se deben cumplir los siguientes predicados.\par
 $1.[P_{llam} \Rightarrow P_{def}(x,y := E, a)]$\par
-$2.[P_{llam}(a,b := A,B) \land Q_{def}(x,y_0,y,z := E, A, a, b) \Rightarrow Q_{llam}]$\par
+$2.[P_{llam}(a,b := A,B) \land Q_{def}(x,y_0,y,z := E(a,b := A,B), A, a, b) \Rightarrow Q_{llam}]$\par
 
 Donde $A,B$ son los valores iniciales de los argumentos de entrada-salida y
 salida respectivamente y son constantes cualquieras dentro de la demostración.\par

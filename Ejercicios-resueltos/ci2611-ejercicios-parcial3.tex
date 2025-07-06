@@ -1,0 +1,1189 @@
+\documentclass[hidelinks]{article}
+%Packages
+\usepackage{amsmath}
+\usepackage{amssymb}
+%\usepackage{mathabx}
+\usepackage{dirtytalk}
+\usepackage{textcomp}
+\usepackage[margin=1in]{geometry}
+\usepackage{tikz}
+\usetikzlibrary{arrows,positioning,shapes,fit,calc}
+\pgfdeclarelayer{background}
+\pgfsetlayers{background,main}
+\usepackage{hyperref}
+\usepackage{setspace}
+\usepackage{framed}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\setlength{\headheight}{13.07225pt}
+\rfoot[CI2611 - Problemario]{CI2611 - Problemario - P3}
+%\rfoot{\thepage}
+\doublespacing
+\usepackage{needspace}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{indentfirst}
+%---
+%Customize
+\newcommand{\myparagraph}[1]{\paragraph{#1}\mbox{}\\}
+\newcommand\myrule[1]{\multicolumn{1}{| l}{#1}}
+\def\multiset#1#2{\ensuremath{\left(\kern-.3em\left(\genfrac{}{}{0pt}{}{#1}{#2}\right)\kern-.3em\right)}}
+\renewcommand{\contentsname}{Contenido}
+%---
+
+%--- No page break
+\newenvironment{absolutelynopagebreak}
+{\Needspace{10\baselineskip}\begin{quote}}
+		{\end{quote}}
+%---
+
+\title{CI2611 - Algoritmos y estructuras I \\ Parcial 3}
+\date{Abr-Jul 2025}
+\author{Daniel Delgado}
+\begin{document}
+\maketitle
+
+\tableofcontents
+
+\newpage
+
+\section{Resumen Parcial 3}
+
+\subsection{Recursión}\par
+
+\subsubsection{Procedimientos y Funciones Recursivas}
+
+\begin{absolutelynopagebreak}
+	$\textbf{proc} \; p \; (in \; x; \; in-out \; y; \; out \; z)$ \par
+	$\quad \{P_{def}\}$ \par
+	$\quad \{Q_{def}\}$\par
+	$\quad \{Cota: t\}$\par
+	$\qquad [$\par
+			$\qquad \quad \dots$\par
+			$\qquad \quad \{P_{llam}\} \; p(E,a,b) \; \{Q_{llam}\}$\par
+			$\qquad  \quad \dots $\par
+			$\qquad ]$\par
+\end{absolutelynopagebreak}
+
+\begin{absolutelynopagebreak}
+	$\textbf{func} \; f \; (x : T) \rightarrow T^{\prime}$ \par
+	$\quad \{P_{def}\}$ \par
+	$\quad \{Q_{def}\}$\par
+	$\quad \{Cota: t\}$\par
+	$\qquad [\langle$ Cuerpo que debe tener una llamada a f $\rangle$\par
+			$\qquad  \quad >> E$\par
+			$\qquad ]$\par
+\end{absolutelynopagebreak}
+
+\subsubsection{Correctitud de Recursividad}
+
+\textbf{Prueba 1}\par
+Se debe demostrar la siguiente tripleta, igualando la función de cota a una
+constante. Esta demostración implica aplicar las técnicas que se vieron para el
+primer parcial de acuerdo al cuerpo del procedimiento.\par
+$\{P_{def} \land t = X\}$\par
+$\langle$ Cuerpo del procedimiento $\rangle$\par
+$\{Q_{def}\}$\par
+
+\textbf{Prueba 2}\par
+Demostración de la disminución de la cota en cada llamada recursiva en la
+primera prueba.\par
+$2.1. [P_{llam} \Rightarrow (P_{def} \land t < X)(x,y := E, a)]$\par
+$2.2. [P_{llam}(a,b := A,B) \land Q_{def}(x,y_0,y,z := E(a,b := A,B), A, a, b) \Rightarrow Q_{llam}]$\par
+
+\textbf{Prueba 3}\par
+Demostración de función acotada.\par
+$[P_{def} \Rightarrow t \geq 0]$\par
+
+\subsection{Invariante de Cola}\par
+
+\subsubsection{Caso 1}
+
+Se tiene una función $F$ de la siguiente forma,\par
+
+\begin{equation}
+	F(X) =
+	\begin{cases}
+		h_1(X)    & \text{si } b_1(X)                                                               \\
+		h_2(X)    & \text{si } b_2(X)                                                               \\
+		\dots                                                                                       \\
+		h_m(X)    & \text{si } b_m(X)                                                               \\
+		F(g_1(X)) & \text{si } \neg b_1(X) \land \neg b_2(X) \dots \neg b_m(X) \land c(X)           \\
+		F(g_2(X)) & \text{si } \neg \neg b_1(X) \land \neg b_2(X) \dots \neg b_m(X) \land \neg c(X)
+	\end{cases}
+\end{equation} \par
+Donde,\par
+
+$X = x_1,x_2,\dots,x_k$ con $k \in \mathbb{N}$\par
+$h_i$ con $i \in \mathbb{N}$ corresponde a los casos bases definidos por $F$.\par
+$F(g_j(X))$ con $j \in \mathbb{N}$ corresponde a los casos recursivos definidos por $F$.
+
+Se quiere derivar un programa cuya postcondición es $r = F(\overline{A})$ para
+algún $\overline{A} = (a_1,a_2, \dots, a_k)$. Se define el Invariante de cola
+como.
+
+\begin{center}
+	Inv: $F(X) = F(\overline{A})$
+\end{center}\par
+
+El programa derivado tiene la forma siguiente.\par
+
+\begin{absolutelynopagebreak}
+	[\par
+		$\quad const \; x_1,x_2,\dots,x_k: T;$\par
+		$\quad x := a_1,a_2, \dots, a_k$\par
+		$\quad \{Inv: F(x_1,x_2,\dots,x_k) = F(a_1,a_2, \dots, a_k)\}$\par
+		$\qquad \quad do \; \neg b_1(x_1,x_2,\dots,x_k) \land \neg b_2(x_1,x_2,\dots,x_k) \dots \neg b_m(x_1,x_2,\dots,x_k) \rightarrow$ \par
+		$\qquad \qquad if \;  c(x_1,x_2,\dots,x_k) \rightarrow$ \par
+		$\qquad \qquad \quad x := g_1(x_1,x_2,\dots,x_k)$ \par
+		$\qquad \qquad [\;] \; \neg c(x_1,x_2,\dots,x_k) \rightarrow$ \par
+		$\qquad \qquad \quad x := g_2(x_1,x_2,\dots,x_k)$ \par
+		$\qquad \qquad fi$ \par
+		$\qquad \quad od$ \par
+		$\qquad \quad if \; b_1(x_1,x_2,\dots,x_k) \land \neg b_2(x_1,x_2,\dots,x_k) \dots \neg b_m(x_1,x_2,\dots,x_k) \rightarrow$ \par
+		$\qquad \qquad r = h_1(x_1,x_2,\dots,x_k)$\par
+		$\qquad \quad [\;] \; \neg b_1(x_1,x_2,\dots,x_k) \land b_2(x_1,x_2,\dots,x_k) \dots \neg b_m(x_1,x_2,\dots,x_k) \rightarrow$ \par
+		$\qquad \qquad r = h_2(x_1,x_2,\dots,x_k)$\par
+		$\qquad \quad \dots$ \par
+		$\qquad \quad [\;] \; \neg b_1(x_1,x_2,\dots,x_k) \land \neg b_2(x_1,x_2,\dots,x_k) \dots b_m(x_1,x_2,\dots,x_k) \rightarrow$ \par
+		$\qquad \qquad r = h_m(x_1,x_2,\dots,x_k)$\par
+		$\qquad \quad [\;] \; \neg b_1(x_1,x_2,\dots,x_k) \land \neg b_2(x_1,x_2,\dots,x_k) \dots \neg b_m(x_1,x_2,\dots,x_k) \rightarrow$ \par
+		$\qquad \qquad skip$\par
+		$\qquad \quad fi$ \par
+		$\quad \{r =F(a_1,a_2, \dots, a_k)\}$ \par
+	]\par
+\end{absolutelynopagebreak}\par
+
+Para el caso particular de un solo caso base, una sola variable y un solo caso
+recursivo.\par
+
+\begin{equation}
+	F(x) =
+	\begin{cases}
+		h(x)    & \text{si } b(x)      \\
+		F(g(x)) & \text{si } \neg b(x) \\
+	\end{cases}
+\end{equation} \par
+
+Donde $h(x)$ es fácil de calcular en una sola iteración.\par
+
+El invariante está definido por la expresión siguiente, con $A$ un valor
+cualquiera en donde $F$ está definido y represemta el valor de x para el cual
+se desea obtener un resultado del programa.\par
+
+\begin{center}
+	Inv: $F(x) = F(A)$
+\end{center}
+
+De donde se deriva el siguiente esquema de programa.\par
+
+\begin{absolutelynopagebreak}
+	[\par
+		$\quad const \; x: T;$\par
+		$\quad x := A$\par
+		$\quad \{Inv: F(x) = F(A)\}$\par
+		$\qquad \quad do \; \neg b(x) \rightarrow$ \par
+		$\qquad \qquad x := g(x)$ \par
+		$\qquad \quad od$ \par
+		$\qquad \quad r = h(x)$ \par
+		$\quad \{r =F(A)\}$ \par
+	]\par
+\end{absolutelynopagebreak}\par
+
+\subsubsection{Caso 2}
+
+Se tiene una función $F$ de la siguiente forma.\par
+
+\begin{equation}
+	F(x) =
+	\begin{cases}
+		h(x)                 & \text{si } b(x)      \\
+		F(g(x)) \otimes j(x) & \text{si } \neg b(x) \\
+	\end{cases}
+\end{equation} \par
+
+Donde $\otimes$ es una operación \textbf{asociativa} con \textbf{elemento
+	neutro $e$}.\par
+
+Se quiere derivar un programa cuya postcondición es $r = F(A)$ para algún $A$
+en el dominio de $F$.\par
+
+El invariante de cola se define como sigue.\par
+
+\textit{"Resultado Final" = "Lo que lleva" $\otimes$ "Lo que falta por calcular"}.\par
+
+Lo cual se traduce en la expresión matemática siguiente.\par
+
+\begin{center}
+	Inv: $F(A) = r \otimes F(x)$
+\end{center}
+
+\begin{enumerate}
+	\item Se inicializan las variables $r$ y $x$.\par
+	      $r, x := e, A$\par
+	      Esto garantiza que el invariante se cumple antes de entrar al bucle.
+
+	\item Si $b(x)$ se cumple entonces $F(x) = h(x)$ entonces se cumple.\par
+	      $F(A) = r \otimes F(x) \equiv F(A) = r \otimes h(x)$\par
+	      Esto garantiza que el invariante se cumple al finalizar el bucle.\par
+
+	\item Si $b(x)$ no se cumple entonces $F(x) = F(g(x)) \otimes j(x)$, por lo tanto se
+	      tiene lo siguiente.\par
+	      $\qquad F(A) = r \otimes F(x) \equiv r \otimes (F(g(x)) \otimes j(x)) \equiv (r \otimes j(x)) \otimes F(g(x))$\par
+	      $\equiv \qquad \langle F(x) \rangle$\par
+	      $\qquad r \otimes (F(g(x)) \otimes j(x))$\par
+	      $\equiv \qquad \langle Asociatividad \rangle$\par
+	      $\qquad (r \otimes j(x)) \otimes F(g(x))$\par
+	      El invariante se cumple siempre que se hagan las siguientes asignaciones dentro
+	      del bucle.\par
+	      \begin{center}
+		      $r := r \otimes j(x)$\par
+		      $x := g(x)$\par
+	      \end{center}
+	      De esta manera el invariante se cumple durante el bucle.\par
+\end{enumerate}
+
+Finalmente, el esquema del programa quedará.\par
+
+\begin{absolutelynopagebreak}
+	[\par
+		$\quad const \; x: T;$\par
+		$\quad x, r := A, e;$\par
+		$\quad \{Inv: F(A) = r \otimes F(x)\}$\par
+		$\qquad \quad do \; \neg b(x) \rightarrow$ \par
+		$\qquad \qquad r, x := r \otimes j(x), g(x)$ \par
+		$\qquad \quad od$ \par
+		$\quad \{ F(A) = r \otimes a\}$ \par
+		$\qquad \quad r = h(x)$ \par
+		$\quad \{r =F(A)\}$ \par
+	]\par
+\end{absolutelynopagebreak}\par
+
+\subsection{Recursión de Cola}\par
+Regularmente se busca transformar una función recursiva en una función con
+recursión de cola, para ello es necesario que la última llamada recursiva sea
+la última instrucción en la función, de manera que no hay operaciones
+pendientes después de la llamada recursiva.\par
+
+Esquema general para el análisis.\par
+
+\begin{enumerate}
+	\item \textbf{Identificar} las expresiones de la recursión original que hacen que no sea de cola.
+	\item \textbf{Sustituir} las llamadas recursivas por acumuladores, los cuales mantendrán actualizados los cálculos realizados en iteraciones pasadas. Estos acumuladores será uno por cada llamada recursiva y serán parámetros de la función. Se deberá indicar una expresión matemática que de forma general permita determinar el valor del acumulador: al inicio, al final y en una actualización del iterador.
+	\item \textbf{Agregar o Identificar (si ya existe)} en los parámetros un índice que permita determinar en qué iteración nos encontramos. Puede ser creciente o decreciente.
+	\item \textbf{Transformar} la llamada recursiva en una de cola de tal manera que el iterador disminuya o aumente en uno y el acumulador se actualice debidamente.
+	\item Identificar la expresión que representa el caso base la cual debe estar escrita
+	      en función del acumulador.
+	\item Identificar el valor inicial del acumulador de tal manera que el resultado sea
+	      igual al de la recursión normal.
+\end{enumerate}
+
+\newpage
+\vspace*{\fill}
+\hspace*{\fill} --- PROBLEMAS RESUELTOS --- \hspace*{\fill}
+\vspace*{\fill}
+\thispagestyle{empty}
+\newpage
+
+\section{Recursión}
+
+\subsection{Ejercicios de clase}\par
+
+\subsubsection{Practica Ene-Mar 2025}
+
+Demuestre el siguiente procedimiento recursivo.\par
+
+\begin{absolutelynopagebreak}
+	$\textbf{proc} \; productoria(entrada \; i, N: int; A: \; array[0..N) \; of \; int; salida \; r: int)$ \par
+	$\quad \{Pre: 0 \leq i \leq N\}$;\par
+	$\quad \{Post: r = (\prod k | i <= k < N: A[k])\}$;\par
+	$\quad \{Cota: N - i\}$;\par
+	$\qquad [$\par
+			$\qquad \quad if \; i = N \rightarrow r := 1$\par
+			$\qquad \quad [\;] \; i < N \rightarrow $\par
+			$\qquad \qquad productoria(i + 1, N, A, r)$;\par
+			$\qquad \qquad r := A[i] * r $\par
+			$\qquad \quad fi$\par
+			$\qquad ]$\par
+\end{absolutelynopagebreak}\par
+
+\textbf{Solución}
+
+\begin{itemize}
+	\item Prueba 1.\par
+	      Se debe probar la siguiente tripleta.\par
+	      $\{P_{def} \land t = X\} \; S \; \{Q_{def}\}$\par
+	      Es decir,\par
+	      \begin{absolutelynopagebreak}
+		      $\{0 \leq i \leq N \land N - i = X\}$\par
+		      $\quad  if \; i = N \rightarrow r := 1$\par
+		      $\quad  [\;] \; i < N \rightarrow $\par
+		      $\quad \qquad productoria(i + 1, N, A, r)$;\par
+		      $\quad \qquad r := A[i] * r $\par
+		      $\quad  fi$\par
+		      $\{r = (\prod k | i <= k < N: A[k])\}$\par
+	      \end{absolutelynopagebreak}
+
+	      Se debe probar la selección, con las siguientes pruebas.\par
+	      $1.1 \; P \Rightarrow B_0 \lor B_1$\par
+	      $1.2.0 \; \{P \land B_0\} S_0 \{Q\}$\par
+	      $1.2.1 \; \{P \land B_1\} S_1 \{Q\}$\par
+
+	      \textbf{Prueba 1.1.}\par
+	      $0 \leq i \leq N \land N - i = X \Rightarrow i = N \lor i < N$\par
+
+	      Suposición del antecedente, empezando por true.\par
+
+	      Suponemos:\par
+	      $H_0: \; 0 \leq i \leq N$\par
+	      $H_1: \; N - i = X$\par
+
+	      $\qquad true$\par
+	      $\equiv \qquad \langle H0 \rangle$\par
+	      $\qquad 0 \leq i \leq N$\par
+	      $\equiv \qquad \langle a \leq b \leq c \equiv a \leq b \land b \leq c \rangle$\par
+	      $\qquad 0 \leq i \land i \leq N$\par
+	      $\equiv \qquad \langle p \land q \Rightarrow p \rangle$\par
+	      $\qquad i \leq N$\par
+	      $\equiv \qquad \langle$ Aritmética $\rangle$\par
+	      $\qquad i = N \lor i < N$\par
+	      $\blacksquare$\par
+
+	      \textbf{Prueba 1.2.0}\par
+	      Se debe probar la siguiente tripleta.\par
+	      $\{0 \leq i \leq N \land N - i = X \land i = N\} \; r := 1 \; \{r = (\prod k | i <= k < N: A[k])\} $\par
+	      Por regla de la asignación, debemos probar el siguiente predicado.\par
+	      $0 \leq i \leq N \land N - i = X \land i = N\ \Rightarrow (r = (\prod k | i <= k < N: A[k]))(r := 1) $\par
+	      Por suposición del antecedente, empezando por el consecuente para alcanzar
+	      true.\par
+	      Suponemos:\par
+	      $H_0: \; 0 \leq i \leq N$\par
+	      $H_1: \; N - i = X N$\par
+	      $H_2: \; i = N$\par
+	      $\qquad (r = (\prod k | i <= k < N: A[k]))(r := 1)$\par
+	      $\equiv \qquad \langle$ Sustitucion Textual $\rangle$\par
+	      $\qquad 1 = (\prod k | i <= k < N: A[k])$\par
+	      $\equiv \qquad \langle$ Sustitución por $H2\rangle$\par
+	      $\qquad 1 = (\prod k | N <= k < N: A[k])$\par
+	      $\equiv \qquad \langle$ Rango vacío $(\prod k | false: x) = 1\rangle$\par
+	      $\qquad 1 = 1$\par
+	      $\equiv \qquad \langle$ Aritmética $\rangle$\par
+	      $\qquad true$\par
+	      $\blacksquare$\par
+
+	      \textbf{Prueba 1.2.1}\par
+	      Se debe probar la siguiente tripleta.\par
+	      $\{0 \leq i \leq N \land N - i = X \land i < N\} \; productoria(i + 1, N, A, r);r := A[i] * r \; \{r = (\prod k | i <= k < N: A[k])\} $\par
+	      Dado que se tiene una secuenciación se debe obtener la aserción intermedia,
+	      para lo cual podemos usar el precondición más débil para la asignación.\par
+	      $\qquad wp(r := A[i]*r).(r = (\prod k | i <= k < N: A[k]))$\par
+	      $\equiv \qquad \langle$ Definición wp$\rangle$\par
+	      $\qquad (r = (\prod k | i <= k < N: A[k]))(r := A[i]*r)$\par
+	      $\equiv \qquad \langle$ Sustitución textual$\rangle$\par
+	      $\qquad A[i]*r = (\prod k | i <= k < N: A[k])$\par
+
+	      De esta manera tenemos las siguientes tripletas.\par
+	      $\{0 \leq i \leq N \land N - i = X \land i < N\}$\par
+	      $\quad productoria(i + 1, N, A, r);$\par
+	      $\{A[i]*r = (\prod k | i <= k < N: A[k])\}$\par
+	      $\quad r := A[i] * r$\par
+	      $\{r = (\prod k | i <= k < N: A[k])\} $\par
+
+	      Como la precondición más débil asegura correctitud, se considera que la
+	      asigación ya está probada, por lo tanto, los queda probar la siguiente.\par
+
+	      $\{0 \leq i \leq N \land N - i = X \land i < N\}$\par
+	      $\quad productoria(i + 1, N, A, r);$\par
+	      $\{A[i]*r = (\prod k | i <= k < N: A[k])\}$\par
+
+		  Dado que es un procedimiento recursivo se debe probar.\par
+		  $1. \; P_{llam} \Rightarrow (P_{def} \land t < X)(x,y := E,a)$\par
+		  $2. \; P_{llam}(a,b := A,B) \land Q_{def}(x,y_0,y,z := E(a,b := A,B), A, a,b) \Rightarrow Q_{llam}$\par
+
+		  \textbf{Prueba 1.2.1.1}\par
+		  $0 \leq i \leq N \land N - i = X \land i < N \Rightarrow (0 \leq i \leq N \land N - i < X)(i,N, A := i + 1,N,A)$\par
+
+		  Suposición del antecedente, empezando por el consecuente para alcanzar true.\par
+
+		  Suponiendo:\par
+		  $H_0: \; 0 \leq i \leq N$\par
+		  $H_1: \; N - i = X$\par
+		  $H_2: \; i < N$\par
+
+		  $\qquad (0 \leq i \leq N \land N - i < X)(i,N, A := i + 1,N,A)$\par
+	      $\equiv \qquad \langle$ Sustitución textual$\rangle$\par
+		  $\qquad 0 \leq i + 1 \leq N \land N - (i + 1) < X$\par
+	      $\equiv \qquad \langle$ Aritmética$\rangle$\par
+		  $\qquad 0 \leq i + 1 \leq N \land N - i - 1 < X$\par
+	      $\equiv \qquad \langle$ Sustitución por $H_1\rangle$\par
+		  $\qquad 0 \leq i + 1 \leq N \land X - 1 < X$\par
+	      $\equiv \qquad \langle$ $a - 1 < a \equiv true\rangle$\par
+		  $\qquad 0 \leq i + 1 \leq N$\par
+	      $\equiv \qquad \langle$ $a \leq b \leq c \equiv a \leq b \land b \leq c\rangle$\par
+		  $\qquad 0 \leq i + 1 \land i + 1 \leq N$\par
+	      $\equiv \qquad \langle$ Por $H_2: \; i < N \equiv true \Rightarrow i + 1 \leq N \rangle$\par
+		  $\qquad 0 \leq i + 1$\par
+	      $\equiv \qquad \langle$ Por $H_1: \; 0 \leq i \equiv true \Rightarrow 0 \leq i + 1 \rangle$\par
+		  $\qquad true$\par
+		  $\blacksquare$\par
+
+		  \textbf{Prueba 1.2.1.2}\par
+
+\end{itemize}
+
+\newpage
+
+\section{Invariante de Cola}
+
+\subsection{Ejercicios Kaldewaij}\par
+
+\subsubsection{Ejemplo}
+
+Derivar programa para la exponenciación $x^y$.\par
+
+\begin{absolutelynopagebreak}
+	[\par
+		$\quad const \; A, B: int;$\par
+		$\quad var \; r : int;$\par
+		$\qquad \quad \langle Exponenciancion \rangle$ \par
+		$\quad \{r =A^B\}$ \par
+	]\par
+\end{absolutelynopagebreak}\par
+
+\begin{enumerate}
+	\item Se define la función $F$\par
+
+	      \begin{equation}
+		      F(x,y) =
+		      \begin{cases}
+			      1                                   & \text{si } y = 0                       \\
+			      1 \cdot F(x \cdot x, y \; div \; 2) & \text{si } y \neq 0 \land y \mod 2 = 0 \\
+			      x \cdot F(x, y - 1)                 & \text{si } y \neq 0 \land y \mod 2 = 1
+		      \end{cases}
+	      \end{equation} \par
+
+	\item Se define el invariante: $P: F(A,B) = r \cdot F(x,y) \equiv A^B = r \cdot x^y$.\par
+	\item Variables y valores iniciales.\par
+
+	      EL operador principal de F es la multiplicación cuyo elemento neutro es 1, por
+	      lo tanto nuestra variable de resultador $r$ se inicializa en 1, mientras que
+	      $x$ se inicializa en su valor máximo $A$ y $y$ igualmente en su valor máximo B.\par
+
+	      \begin{center}
+		      $r,x,y : = 1, A, B$
+	      \end{center}
+
+	\item Para validar que el invariante se cumple en todo momento verificamos.
+
+	      \begin{itemize}
+		      \item Cuando $y \neq 0$\par
+
+		            $\qquad F(A,B) = r \cdot F(x,y)$\par
+		            $\equiv \qquad \langle F(x,y)$ en $ y \neq 0 \rangle$\par
+		            $\qquad F(A,B) = r \cdot 1$\par
+		            $\equiv \qquad \langle$ Operando $\rangle$\par
+		            $\qquad F(A,B) = r$\par
+		            $\equiv \qquad \langle$ Definición de $F\rangle$\par
+		            $\qquad A^B = r$\par
+
+		      \item Cuando $y = 0$.\par
+
+		            \begin{itemize}
+			            \item Cuando $y \mod 2 = 0$.\par
+			                  $\qquad F(A,B) = r \cdot F(x,y)$\par
+			                  $\equiv \qquad \langle $ Definición de $ F \rangle$\par
+			                  $\qquad F(A,B) = r \cdot F(x \cdot x, y \; div \; 2)$\par
+			                  $\equiv \qquad \langle P$  $\rangle$\par
+			                  $\qquad F(A,B) = r \cdot (x \cdot x)^y$\par
+			                  $\equiv \qquad \langle $ S.T sobre P $\rangle$\par
+			                  $\qquad P(x,y := x \cdot x, y \; div \; 2)$\par
+			                  Las actualizaciones son las siguientes.\par
+
+			                  \begin{center}
+				                  $x,y := x \cdot x, y \; div \; 2$\par
+			                  \end{center}
+			            \item Cuando $y \mod 2 = 1$.\par
+			                  $\qquad F(A,B) = r \cdot F(x,y)$\par
+			                  $\equiv \qquad \langle $ Definición de $ F \rangle$\par
+			                  $\qquad F(A,B) = r \cdot x \cdot F(x, y - 1)$\par
+			                  $\equiv \qquad \langle P$  $\rangle$\par
+			                  $\qquad F(A,B) = r \cdot x \cdot (x)^{y-1}$\par
+			                  $\equiv \qquad \langle $ S.T sobre P $\rangle$\par
+			                  $\qquad P(r,y := r \cdot x, y - 1)$\par
+			                  Las actualizaciones son las siguientes.\par
+
+			                  \begin{center}
+				                  $r,y := r \cdot x, y - 1$\par
+			                  \end{center}
+		            \end{itemize}
+	      \end{itemize}
+
+	      Finalmente, el programa es el siguiente.\par
+
+	      \begin{absolutelynopagebreak}
+		      [\par
+			      $\quad const \; A, B: int;$\par
+			      $\quad var \; r, x, y : int;$\par
+			      $\quad r, x, y := 1, A, B;$\par
+			      $\quad \{Inv:\; r \cdot x^y = A^B \land y \geq 0\}\{Cota: \; y\}$ \par
+			      $\qquad do \; y \neq 0 \rightarrow$ \par
+			      $\qquad \quad if \; y \mod 2 = 0 \rightarrow$ \par
+			      $\qquad \quad \quad x, y := x \cdot x, y \; div \; 2$ \par
+			      $\qquad \quad [\;] \; y \mod 2 = 1 \rightarrow$ \par
+			      $\qquad \quad \quad r, y := r \cdot x, y - 1$ \par
+			      $\qquad \quad fi$ \par
+			      $\qquad od$ \par
+			      $\quad \{r =A^B\}$ \par
+		      ]\par
+	      \end{absolutelynopagebreak}\par
+
+\end{enumerate}
+
+\newpage
+
+\subsubsection{Ejercicio 0}
+
+Derive un programa que calcule $A * B$ donde A y B son números naturales. Solo
+se permite el uso de div 2, mod 2, *2, suma y resta.\par
+
+\textbf{Solución}\par
+
+\begin{enumerate}
+	\item Se define la función recursiva.\par
+
+	      \begin{equation}
+		      F(x,y) =
+		      \begin{cases}
+			      0               & \text{si } y = 0    \\
+			      x + F(x, y - 1) & \text{si } y \neq 0
+		      \end{cases}
+	      \end{equation} \par
+
+	\item Se define como invariante el siguiente predicado.\par
+	      \begin{center}
+		      $P: F(A,B) = r + F(x,y) \equiv A \cdot B = r + x \cdot y$\par
+	      \end{center}
+
+	\item Valores iniciales.\par
+	      Para que el invariante sea cierto antes de la entrada en el bucle, se debe
+	      cumplir que $r = 0$ (elemento neutro de la suma, el cual es el operador
+	      principal de F), $x = A$, $y = B$. De esta manera, el invariante propuesto
+	      queda como se muestra a continuación.\par
+
+	      $A \cdot B = 0 + A \cdot B = A \cdot B$\par
+	\item Para validar que el invariante se cumple durante el bucle veamos qué pasa
+	      cuando $y \neq 0$.\par
+	      $\qquad F(A,B) = r + F(x,y)$\par
+	      $\equiv \qquad \langle $ Definición de $ F \rangle$\par
+	      $\qquad F(A,B) = r + x + F(x, y - 1)$\par
+	      $\equiv \qquad \langle $ S.T sobre P $\rangle$\par
+	      $\qquad P(r,y := r + x, y - 1)$\par
+	      Las actualizaciones son las siguientes.\par
+
+	      \begin{center}
+		      $x,y := r + x, y - 1$\par
+	      \end{center}
+
+	      Para validar que el invariante se cumple al finalizar el bucle veamos qué pasa
+	      cuando $y = 0$.\par
+	      $\qquad F(A,B) = r + F(x,y)$\par
+	      $\equiv \qquad \langle $ Definición de $ F \rangle$\par
+	      $\qquad F(A,B) = r + 0$\par
+	      $\equiv \qquad \langle $ Aritmética $\rangle$\par
+	      $\qquad F(A,B) = r$\par
+
+	      Entonces, se dice que $r$ almacena el resultado deseado, al momento de
+	      finalizar el bucle.\par
+
+\end{enumerate}
+
+Finalmente, el programa es el siguiente.\par
+
+\begin{absolutelynopagebreak}
+	[\par
+		$\quad const \; A, B: int;$\par
+		$\quad var \; r, x, y : int;$\par
+		$\quad r, x, y := 0, A, B;$\par
+		$\quad \{Inv:\; A \cdot B = r + x \cdot y \land y \geq 0\}\{Cota: \; y\}$ \par
+		$\qquad do \; y \neq 0 \rightarrow$ \par
+		$\qquad \quad r, y := r + x, y - 1$ \par
+		$\qquad od$ \par
+		$\quad \{r =A \cdot B\}$ \par
+	]\par
+\end{absolutelynopagebreak}\par
+
+\newpage
+
+Finalmente, el programa es el siguiente.\par
+
+\begin{absolutelynopagebreak}
+	[\par
+		$\quad const \; N: int;$\par
+		$\quad var \; n, r : int;$\par
+		$\quad n := N;$\par
+		$\quad \{Inv:\; fusc(n) = fusc(N) \land N \geq 0\}\{Cota: \; n\}$ \par
+		$\qquad do \; n \neq 0 \land n \neq 1 \rightarrow$ \par
+		$\qquad \quad if \; n \mod 2 = 0 \rightarrow$ \par
+		$\qquad \qquad n := n \; div \; 2$ \par
+		$\qquad \quad [\;] \; n \mod 2 = 1 \rightarrow$ \par
+		$\qquad \qquad n := n + n \; div \; 2 $ \par
+		$\qquad \quad fi$ \par
+		$\qquad od$ \par
+		$\qquad if \; n = 0 \rightarrow$ \par
+		$\qquad \quad r = 0$ \par
+		$\qquad [\;] \; n = 1 \rightarrow$ \par
+		$\qquad \quad r = 1$ \par
+		$\qquad fi \rightarrow$ \par
+		$\quad \{r = fusc(N)\}$ \par
+	]\par
+\end{absolutelynopagebreak}\par
+
+\newpage
+
+\subsubsection{Ejercicio 4}
+
+Resolver.\par
+
+\begin{absolutelynopagebreak}
+	[\par
+	$\quad const \; N: int;$\par
+	$\quad const \; f: array [0..N) of int;$\par
+			$\quad var \; r : bool;$\par
+			$\quad S$\par
+			$\quad \{r \equiv (\exists \; i| 0 \leq i < N: f[i] = 0)\}$ \par
+		]\par
+\end{absolutelynopagebreak}\par
+
+Definiendo,\par
+
+$G(n) \equiv (\exists i| n \leq i < N: f[i] = 0)$ para $0 \leq n \leq N$\par
+y derivando la relación de recurrencia para $G$.\par
+
+\textbf{Solución}\par
+
+\begin{enumerate}
+	\item Se define la función recursiva.\par
+
+	      \begin{equation}
+		      G(n) \equiv
+		      \begin{cases}
+			      true     & \text{si } f[n] = 0                   \\
+			      false    & \text{si } f[n] \neq 0 \land n = 0    \\
+			      G(n - 1) & \text{si } f[n] \neq 0 \land n \neq 0
+		      \end{cases}
+	      \end{equation} \par
+
+	\item Invariante de cola para este caso.\par
+	      \begin{center}
+		      $G(n) \equiv G(N) \land 0 \leq n \leq N$
+	      \end{center}
+
+	\item El programa final queda.\par
+	      \begin{absolutelynopagebreak}
+		      [\par
+		      $\quad const \; N: int;$\par
+		      $\quad const \; f: array [0..N) \; of \; int;$\par
+				      $\quad var \; r : bool;$\par
+				      $\quad var \; n : int;$\par
+				      $\quad \{N \geq 0\}$\par
+				      $\qquad n := N;$\par
+				      $\qquad \{Inv: G(n) \equiv G(N) \land 0 \leq n \leq N\} \{Cota: n\}$\par
+				      $\qquad do \; f[n] \neq 0 \land n \neq 0 \rightarrow$\par
+				      $\qquad \quad n := n - 1$\par
+				      $\qquad od$\par
+				      $\qquad r := f[n] = 0$\par
+				      $\quad \{r \equiv (\exists \; i| 0 \leq i < N: f[i] = 0)\}$ \par
+			      ]\par
+	      \end{absolutelynopagebreak}\par
+
+\end{enumerate}
+
+\newpage
+
+\subsubsection{Ejercicio 2 (página 81)}
+
+La función A está definida en los números naturales.\par
+
+$A(0) = 1$\par
+$A(2n) = 2*A(n) \; n \geq 1$\par
+$A(2n + 1) = n + A(2n) \; n \geq 0$\par
+
+Derivar un programa para el cálculo de $A(N)$, $N \geq 0$\par
+
+\textbf{Solución}\par
+
+\begin{enumerate}
+	\item Se define la función recursiva.\par
+	      \begin{equation}
+		      A(n) \equiv
+		      \begin{cases}
+			      1         & \text{si } n = 0                       \\
+			      2*A(n)    & \text{si } n \geq 0 \land n \mod 2 = 0 \\
+			      n + A(2n) & \text{si } n \geq 1 \land n \mod 2 = 1
+		      \end{cases}
+	      \end{equation} \par
+
+	\item Invariante de cola.\par
+	      \begin{center}
+		      $P: F(N) = r + F(n)$
+	      \end{center}
+
+	\item Para el cumplimiento de este Invariante antes del bucle las variables r y n
+	      deben ser inicializadas como se muestra a continuación.\par
+	      \begin{center}
+		      $r,n := 0, N$
+	      \end{center}
+	\item Cuando $n \neq 0$, estamos dentro del bucle. Se tiene dos posibilidades.\par
+
+	      \begin{itemize}
+		      \item Si $n \mod 2 = 0$, se debe cumplir el invariante.\par
+		            $\qquad F(N) = r + F(n)$\par
+		            $\equiv \quad \langle$ Definición de $F \rangle$\par
+		            $\qquad F(N) = r + 2*A(n)$\par
+	      \end{itemize}
+
+\end{enumerate}
+
+\newpage
+
+\subsection{Ejercicios Tarea 7 Abr-Jul 2015}
+
+\subsubsection{Ejercicio 1}
+
+La definición recursiva de los números de Catalán es
+
+\begin{equation}
+	C_n =
+	\begin{cases}
+		1                              & \text{si } n = 0 \\
+		\frac{2(2n - 1)}{n + 1}C_{n-1} & \text{si } n > 0
+	\end{cases}
+\end{equation} \par
+
+Escriba una función recursiva que implemente en GCL esta definición.\par
+Escriba un programa que calcule los primeros N números de catalán y los
+alamacene en un arreglo A.\par
+Pruebe que la función recursiva es correcta.\par
+
+\textbf{Solución}\par
+
+\begin{enumerate}
+	\item La función recursiva se da en el resultado.\par
+	      \begin{equation}
+		      C(n) =
+		      \begin{cases}
+			      1                               & \text{si } n = 0 \\
+			      \frac{2(2n - 1)}{n + 1}C(n - 1) & \text{si } n > 0
+		      \end{cases}
+	      \end{equation} \par
+	\item El invariante de cola es
+	      \begin{center}
+		      $P: C(N) = r * C(n)$\par
+	      \end{center}
+	\item Valores iniciales.\par
+	      Dado que el operador principal de $C(n)$ es la múltiplicaicón y para que el
+	      invariante sea cierto antes de la entrada en el bucle se debe inicializar con
+	      $r = 1$ (elemento neutro de la multiplicación), luego con $n = N$ el invariante
+	      se cumple.\par
+	      $r * C(n) = 1 * C(N) = C(N)$\par
+	\item Se verifica el invariante dentro del bucle cuando $n > 0$.\par
+	      $\qquad C(N) = r * C(n)$\par
+	      $\equiv \quad \langle$ Definición de  $C(n)\rangle$\par
+	      $\qquad C(N) = r * \frac{2(2n - 1)}{n + 1}C(n - 1)$\par
+	      $\equiv \quad \langle$ Definición de  $P\rangle$\par
+	      $\qquad P(r,n : r * \frac{2(2n - 1)}{n + 1}, n - 1)$\par
+
+	      Las actualizaciones de $r$ y $n$ son las siguientes.\par
+
+	      \begin{center}
+		      $r, n := r * \frac{2(2n - 1)}{n + 1}, n - 1$
+	      \end{center}
+
+	      Ahora verifiquemos que pasa con el invariante al finalizar el bucle.\par
+
+	      $\qquad C(N) = r * C(n)$\par
+	      $\equiv \quad \langle$ S.T $n = 0\rangle$\par
+	      $\qquad C(N) = r * C(0)$\par
+	      $\equiv \quad \langle$ Definición de $C\rangle$\par
+	      $\qquad C(N) = r * 1$\par
+	      $\equiv \quad \langle$ Aritmética $\rangle$\par
+	      $\qquad C(N) = r$\par
+
+	      Por lo tanto al finalizar el bucle $r$ almacena el valor de $C(N)$.\par
+
+	\item La función que calcula el número de catalán para los primeros N enteros.\par
+	      \begin{absolutelynopagebreak}
+		      $\textbf{func} \; catalan(N: int) \rightarrow float$ \par
+		      $\quad \{pre: N \geq 0\}$ \par
+		      $\quad \{post: (\forall k| 0 \leq k < n: )\}$\par
+		      [\par
+			      $\quad var \; r : float$;\par
+			      $\quad var \; n : int$;\par
+			      $\qquad r, n := 1, N$;\par
+			      $\qquad \{Inv: C(N) = r * C(n)\} \{Cota: n\}$\par
+			      $\qquad do \; n \neq 0 \rightarrow$\par
+			      $\qquad \quad A[N - n] := r$\par
+			      $\qquad \quad r, n := r * \frac{2(2n - 1)}{n + 1}, n - 1$;\par
+			      $\qquad od$\par
+			      $\quad \{r = C(N)\}$ \par
+			      $\qquad >> r$\par
+		      ]\par
+	      \end{absolutelynopagebreak}\par
+	\item Programa que calcula los N primeros números de Catalán y los alamacena en un
+	      arreglo A de tamaño N.\par
+
+	      \begin{absolutelynopagebreak}
+		      [\par
+		      $\quad const \; N : int$;\par
+		      $\quad const \; A: array [0..N) \; of \; float;$\par
+				      $\quad var \; r : float$;\par
+				      $\quad var \; n : int$;\par
+				      $\qquad \{N \geq 0\}$;\par
+				      $\qquad r, n := 1, N$;\par
+				      $\qquad \{Inv: C(N) = r * C(n)\} \{Cota: n\}$\par
+				      $\qquad do \; n \neq 0 \rightarrow$\par
+				      $\qquad \quad A[N - n] := r$\par
+				      $\qquad \quad r, n := r * \frac{2(2n - 1)}{n + 1}, n - 1$;\par
+				      $\qquad od$\par
+				      $\quad \{r = C(N)\}$ \par
+			      ]\par
+	      \end{absolutelynopagebreak}\par
+
+\end{enumerate}
+
+\newpage
+
+\subsubsection{Ejercicio 2-c}
+
+Dado dos vectores A y B, halle una función recursiva para decir si son iguales.\par
+
+\textbf{Solución}\par
+
+\begin{absolutelynopagebreak}
+	$\textbf{func} \; igualesRec(N: int, n: int, A: array[0..N) \; of \; int, B: array[0..N) \; of \; int) \rightarrow bool$ \par
+	$\quad \{pre: 0 \leq n\}$ \par
+	$\quad \{post: iguales \equiv (\forall k| 0 \leq k < n: A[k] = B[k])\}$ // Cuando va desde el caso base a los recursivos\par
+	[\par
+		$\quad var \; r : bool$;\par
+		$\quad var \; r := true$;\par
+		$\quad if \; n = 0 \rightarrow r := r \land A[n] = B[n]$\par
+		$\quad [\;] \; n \neq 0 \rightarrow r := r \land igualesRec(N, n - 1, A, B)$\par
+		$\qquad >> r$\par
+	]\par
+\end{absolutelynopagebreak}\par
+
+Esta función debe ser llamada por otra función de la siguiente forma.\par
+
+\begin{absolutelynopagebreak}
+	$\textbf{func} \; iguales(N: int, A: array[0..N) \; of \; int, A: array[0..N) \; of \; int) \rightarrow bool$ \par
+	$\quad \{pre: N \geq 0\}$ \par
+	$\quad \{post: iguales \equiv (\forall k| 0 \leq k < N: A[k] = B[k])\}$\par
+	[\par
+		$\quad var \; n : int$;\par
+		$\quad var \; res : bool$;\par
+		$\quad if \; N = 0 \rightarrow res := true$;\par
+		$\quad [\;] \; N > 0 \rightarrow n := N - 1; \;res := igualesRec(N, n, A, B)$;\par
+		$\qquad n := N - 1$;\par
+		$\qquad res := igualesRec(N, n, A, B)$\par
+		$\quad fi$;\par
+		$\qquad >> res$\par
+	]\par
+\end{absolutelynopagebreak}\par
+
+Otra forma de expresar el caso base.\par
+\begin{absolutelynopagebreak}
+	$\textbf{func} \; igualesRec(N: int, n: int, A: array[0..N) \; of \; int, B: array[0..N) \; of \; int) \rightarrow bool$ \par
+	$\quad \{pre: 0 \leq n\}$ \par
+	$\quad \{post: iguales \equiv (\forall k| 0 \leq k < n: A[k] = B[k])\}$ // Cuando va desde el caso base a los recursivos\par
+	[\par
+		$\quad var \; r : bool$;\par
+		$\quad if \; n = -1 \rightarrow r := true$\par
+		$\quad [\;] \; n \geq 0 \rightarrow r := A[n] = B[n] \land igualesRec(N, n - 1, A, B)$\par
+		$\qquad >> r$\par
+	]\par
+\end{absolutelynopagebreak}\par
+
+\newpage
+
+\subsubsection{Ejercicio 2-e}
+
+Dada una matriz de tamaño NxN devolver la suma de los elementos de la diagonal.\par
+
+\textbf{Solución}\par
+
+\begin{absolutelynopagebreak}
+	$\textbf{func} \; sumaDiagRec(N: int, n: int, A: array[0..N)x[0..N) \; of \; int) \rightarrow int$ \par
+	$\quad \{pre: n \leq N\}$ \par
+	$\quad \{post: sumaDiagRec \equiv (\sum k| 0 \leq k < n: A[k][k])\}$\par
+	[\par
+		$\quad var \; r: int$;\par
+		$\quad var \; r := 0$;\par
+		$\quad if \; n = -1 \rightarrow r := 0$\par
+		$\quad [\;] \; n \geq 0 \rightarrow r := A[n][n] + sumaDiagRec(N, n - 1, A)$\par
+		$\quad fi$\par
+		$\qquad >> r$\par
+	]\par
+\end{absolutelynopagebreak}\par
+
+\newpage
+
+\section{Recursión de Cola}
+
+\subsection{Ejercicios de clase}\par
+
+\subsubsection{Ejercicio de clase 1}
+
+Convertir la función de sumatoria de un arreglo de enteros en una recursión de
+cola.\par
+
+\begin{absolutelynopagebreak}
+	$\textbf{func} \; sum(N: int, A: array[0..N) \; of \; int, i: int) \rightarrow int$ \par
+	[\par
+		$\quad var \; r: int$;\par
+		$\quad if \; i = N \rightarrow r := 0$\par
+		$\quad [\;] \; i < N \rightarrow r := A[i] + sum(A, N, i + 1)$\par
+		$\quad fi$\par
+		$\qquad >> r$\par
+	]\par
+\end{absolutelynopagebreak}\par
+
+\textbf{Solución}
+
+\begin{enumerate}
+	\item \textbf{Llamadas recursivas}: Identificar la llamada recursiva.\par
+	      $sum(A, N, i + 1)$\par
+	\item \textbf{Acumuladores}: Definir el acumulador en base a la llamada recursiva, la cual
+	      corresponde a la suma de cada uno de los elementos del arreglo desde 0 hasta i
+	      esto es posible representarlo matemáticamente como una sumatoria.\par
+	      $a = (\sum k | 0 \leq k < i:A[k])$\par
+	\item \textbf{Iterador}: Dado que en cada llamada recursiva $i$ aumenta en 1 entonces este $i$
+	      puede ser usado como iterador, el cual ya existe en la llamada recursiva.\par
+	      Se agrega el acumulador a la definición de la nueva suma.\par
+
+	      $\textbf{func} \; sumCola(N: int, A: array[0..N) \; of \; int, i: int, a: int) \rightarrow int$ \par
+	      $\{a = (\sum k | 0 \leq k < i:A[k])\}$ \par
+
+	\item \textbf{Actualización de $a$}: Veamos qué pasa en $i+1$.\par
+	      \begin{absolutelynopagebreak}
+		      $\qquad (\sum k | 0 \leq k < i:A[k])(i := i + 1)$\par
+		      $\equiv \qquad \langle S.T \rangle$\par
+		      $\qquad (\sum k | 0 \leq k < i + 1:A[k])$\par
+		      $\equiv \qquad \langle$ Último término $\rangle$\par
+		      $\qquad (\sum k | 0 \leq k < i:A[k]) + A[i]$\par
+		      $\equiv \qquad \langle$ Definición de $a\rangle$\par
+		      $\qquad a + A[i]$\par
+	      \end{absolutelynopagebreak}
+
+	      Esto corresponde a la expresión de $a$ en $i + 1$.\par
+	\item \textbf{Cuerpo de la función}: se transforma la llamada recursiva en una de cola.\par
+	      $r := A[i] + sum(A, N, i + 1) \rightarrow r := sumCola(A, N, i + 1, a + A[i])$\par
+	\item \textbf{Casos bases}: Se toma el valor final del iterador, cuando $i = N$ se tiene.\par
+	      $a = (\sum k | 0 \leq k < N:A[k])$\par
+	      Lo cual corresponde a la suma de todos los elementos de A que es lo que
+	      soluciona el problema planteado.
+	\item \textbf{Valores iniciales}: Se verifica la expresión de a en $i = 0$.\par
+	      $a = (\sum k | 0 \leq k < 0:A[k]) = 0$\par
+\end{enumerate}
+
+La función finalmente queda.\par
+
+\begin{absolutelynopagebreak}
+	$\textbf{func} \; sumCola(N: int, A: array[0..N) \; of \; int, i: int, a: int) \rightarrow int$ \par
+	[\par
+		$\quad var \; r: int$;\par
+		$\quad if \; i = N \rightarrow r := a$\par
+		$\quad [\;] \; i < N \rightarrow r := sumCola(A, N, i + 1, a + A[i])$\par
+		$\quad fi$\par
+		$\qquad >> r$\par
+	]\par
+\end{absolutelynopagebreak}\par
+
+La suma de todos los elementos de un arreglo $A$ se hace con la siguiente
+llamada.\par
+
+$sumCola(N, A, 0, 0)$\par
+
+\newpage
+
+\subsubsection{Ejercicio de clase 2}
+
+Convertir la función de Fibonacci en una recursión de cola.\par
+
+\begin{absolutelynopagebreak}
+	$\textbf{func} \; fib(n: int) \rightarrow int$ \par
+	[\par
+		$\quad var \; r: int$;\par
+		$\quad if \; n = 0 \rightarrow r := 0$\par
+		$\quad [\;] \; n = 1 \rightarrow r := 1$\par
+		$\quad [\;] \; n > 1 \rightarrow r := fib(n - 1) + fib(n - 2)$\par
+		$\quad fi$\par
+		$\qquad >> r$\par
+	]\par
+\end{absolutelynopagebreak}\par
+
+\textbf{Solución}
+
+\begin{enumerate}
+	\item \textbf{Llamadas recursivas}: Se identifican las llamadas recursivas que en este
+	      caso son dos.\par
+	      $fib(n - 1), fib(n - 2)$\par
+	\item \textbf{Acumuladores}: Como se tienen dos llamadas recursivas se deben definir
+	      dos acumuladores.\par
+	      $a \rightarrow fib(n - 1)$\par
+	      $b \rightarrow fib(n - 2)$\par
+
+	      Se debe definir una expresión para $a$ y $b$ que caracterice estos acumuladores
+	      en todo momento del programa.\par
+	      Dado que la función ya está definida en $n = 0$ ($fib(0) = 0$) y en $n = 1$
+	      ($fib(1) = 1$), entonces es posible hacer el cambio de variable $n := n + 2$
+	      quedando las expresiones para $a$ y $b$ de la siguiente manera.\par
+	      $a \rightarrow fib(n + 1)$\par
+	      $b \rightarrow fib(n)$\par
+	      Por último, las expresiones que definen a $a$ y $b$ en todo punto de la
+	      recursión son las siguientes.\par
+	      $a = fib(N - n + 1) \; \forall \; 0 \leq n \leq N$\par
+	      $b = fib(N - n) \; \forall \; 0 \leq n \leq N$\par
+
+	\item \textbf{Iterador}: El iterador es $n$.\par
+	      $n: int$\par
+	\item Expresión para la nueva función.\par
+	      $\textbf{func} \; fibCola(n: int, a: int, b: int) \rightarrow int$ \par
+	      $\{a = fib(N - n + 1) \land b = fib(N - n)\}$ \par
+	\item \textbf{Valores iniciales}: Dada la expresión matemática de $a$ y $b$ conviene que la
+	      función empiece en $n = N$.\par
+	      $a = fib(N - N + 1) = fib(1) = 1$\par
+	      $b = fib(N - N) = fib(0) = 0$\par
+	\item \textbf{Casos bases}: Dado que el valor inicial es $n = N$ entonces se toma $n = 0$ como
+	      un caso base, para lo cual se cumple.\par
+	      $a = fib(N - 0 + 1) = fib(N + 1)$\par
+	      $b = fib(N - 0) = fib(N)$\par
+	      De esta manera, notamos que $b$ tendrá el valor final de la función.\par
+	      Cuando $n = 1$ se tiene.\par
+	      $a = fib(N - 1 + 1) = fib(N)$\par
+	      $b = fib(N - 1) = fib(N - 1)$\par
+	      En este caso base $a$ contiene el valor deseado.\par
+	      Por lo tanto,
+	      \begin{center}
+		      $n = 0 \Rightarrow b = fib(N)$\par
+		      $n = 1 \Rightarrow a = fib(N)$\par
+	      \end{center}
+	\item \textbf{Actualización de acumuladores}: Como el valor incial de $n$ resultó conveniente
+	      en $N$, entonces $n$ es decreciente, por lo tanto, los acumuladores se
+	      actualizan en $n = n - 1$.\par
+	      Para $a$:\par
+
+	      $\qquad fib(N - n + 1)$\par
+	      $\equiv \qquad \langle$ Sustitución Textual $n := n - 1\rangle$\par
+	      $\qquad fib(N - (n - 1) + 1)$\par
+	      $\equiv \qquad \langle$ Aritmética $\rangle$\par
+	      $\qquad fib(N - n + 2)$\par
+	      $\equiv \qquad \langle$ Definición fibonacci $fib(n) = fib(n - 1) + fib(n - 2)\rangle$\par
+	      $\qquad fib((N - n + 2) - 1) + fib((N - n + 2) - 2)$\par
+	      $\equiv \qquad \langle$ Aritmética $\rangle$\par
+	      $\qquad fib(N - n + 1) + fib(N - n)$\par
+	      $\equiv \qquad \langle$ Definición de $ a, b\rangle$\par
+	      $\qquad a + b$\par
+
+	      Para $b$:\par
+	      $\qquad fib(N - n)$\par
+	      $\equiv \qquad \langle$ Sustitución Textual $n := n - 1\rangle$\par
+	      $\qquad fib(N - (n - 1))$\par
+	      $\equiv \qquad \langle$ Aritmética $\rangle$\par
+	      $\qquad fib(N - n + 1)$\par
+	      $\equiv \qquad \langle$ Definición de $a\rangle$\par
+	      $\qquad a$\par
+
+	      Por lo tanto, las actualizaciones de los acumuladores son las siguientes.\par
+	      \begin{center}
+		      $a, b := a + b, a$\par
+	      \end{center}
+\end{enumerate}
+
+Finalmente, la función de fibonacci en recursión de cola queda como sigue.\par
+
+\begin{absolutelynopagebreak}
+	$\textbf{func} \; fibCola(n: int, a: int, b: int) \rightarrow int$ \par
+	[\par
+		$\quad var \; r: int$;\par
+		$\quad if \; n = 0 \rightarrow r := b$\par
+		$\quad [\;] \; n = 1 \rightarrow r := a$\par
+		$\quad [\;] \; n > 1 \rightarrow r := fibCola(n - 1, a + b, a)$\par
+		$\quad fi$\par
+		$\qquad >> r$\par
+	]\par
+\end{absolutelynopagebreak}\par
+
+El cáculo de fibonacci para cualquier entero $N$ se obtiene al llamar a la
+función como sigue, usando los valores iniciales calculados.\par
+
+\begin{center}
+	$fibCola(N, 1, 0)$\par
+\end{center}
+
+\newpage
+
+\subsubsection{Ejercicio de practica Ene-Mar 2025}
+
+Usando la técnica de recursión de cola se quiere que derive uan fución
+recursiva de cola a partir de la siguiente función recursiva.\par
+
+\begin{absolutelynopagebreak}
+	$\textbf{func} \; sumaDigits(n: int) \rightarrow int$ \par
+	[\par
+		$\quad var \; r: int$;\par
+		$\quad var \; r := 0$;\par
+		$\quad if \; n = 0 \rightarrow r := 0$\par
+		$\quad [\;] \; n > 0 \rightarrow r := n \mod 10 + sumaDigits(n \; div \; 10)$\par
+		$\quad fi$\par
+		$\qquad >> r$\par
+	]\par
+\end{absolutelynopagebreak}\par
+
+\textbf{Solución}
+
+\begin{enumerate}
+	\item Identificar las llamadas recursivas.\par
+	      $sumaDigits(n \; div \; 10)$\par
+	\item Se define el parámetro $a$ que representará la llamada recursiva.\par
+	      $a = (\sum k | 0)$\par
+\end{enumerate}
+
+\newpage
+
+\subsection{Ejercicios Kaldewaij}\par
+
+\subsubsection{Ejercicio 3}
+
+La función fusc está definida en los números naturales.\par
+
+$fusc(0) = 0, fusc(1) = 1$\par
+$fusc(2*n) = fusc(n)$\par
+$fusc(2*n + 1) = fusc(n) + fusc(n + 1)$\par
+
+Derive un programa que calcule fusc(N) con $N \geq 0$.
+
+\textbf{Solución}\par
+
+\begin{enumerate}
+	\item Se define la función recursiva.\par
+
+	      \begin{equation}
+		      fusc(n) =
+		      \begin{cases}
+			      0                     & \text{si } n = 0                                      \\
+			      1                     & \text{si } n = 1                                      \\
+			      fusc(n)               & \text{si } n \neq 0 \land n \neq 1 \land n \mod 2 = 0 \\
+			      fusc(n) + fusc(n + 1) & \text{si } n \neq 0 \land n \neq 1 \land n \mod 2 = 1
+		      \end{cases}
+	      \end{equation} \par
+
+	\item Se define como invariante el siguiente predicado.\par
+	      \begin{center}
+		      $P: fusc(n) = fusc(N) $\par
+		      $Q: N \geq 0 $\par
+	      \end{center}
+\end{enumerate}
+
+\newpage
+
+\end{document}
