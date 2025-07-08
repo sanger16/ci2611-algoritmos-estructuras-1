@@ -75,9 +75,9 @@
 			$\qquad ]$\par
 \end{absolutelynopagebreak}
 
-\subsubsection{Correctitud de Recursividad}
+\subsubsection{Reglas de Correctitud de Recursividad}
 
-\textbf{Prueba 1}\par
+\textbf{Regla 1}\par
 Se debe demostrar la siguiente tripleta, igualando la función de cota a una
 constante. Esta demostración implica aplicar las técnicas que se vieron para el
 primer parcial de acuerdo al cuerpo del procedimiento.\par
@@ -85,13 +85,13 @@ $\{P_{def} \land t = X\}$\par
 $\langle$ Cuerpo del procedimiento $\rangle$\par
 $\{Q_{def}\}$\par
 
-\textbf{Prueba 2}\par
+\textbf{Regla 2}\par
 Demostración de la disminución de la cota en cada llamada recursiva en la
 primera prueba.\par
 $2.1. [P_{llam} \Rightarrow (P_{def} \land t < X)(x,y := E, a)]$\par
 $2.2. [P_{llam}(a,b := A,B) \land Q_{def}(x,y_0,y,z := E(a,b := A,B), A, a, b) \Rightarrow Q_{llam}]$\par
 
-\textbf{Prueba 3}\par
+\textbf{Regla 3}\par
 Demostración de función acotada.\par
 $[P_{def} \Rightarrow t \geq 0]$\par
 
@@ -296,7 +296,7 @@ Demuestre el siguiente procedimiento recursivo.\par
 \begin{absolutelynopagebreak}
 	$\textbf{proc} \; productoria(entrada \; i, N: int; A: \; array[0..N) \; of \; int; salida \; r: int)$ \par
 	$\quad \{Pre: 0 \leq i \leq N\}$;\par
-	$\quad \{Post: r = (\prod k | i <= k < N: A[k])\}$;\par
+	$\quad \{Post: r = (\prod k | i \leq k < N: A[k])\}$;\par
 	$\quad \{Cota: N - i\}$;\par
 	$\qquad [$\par
 			$\qquad \quad if \; i = N \rightarrow r := 1$\par
@@ -321,7 +321,7 @@ Demuestre el siguiente procedimiento recursivo.\par
 		      $\quad \qquad productoria(i + 1, N, A, r)$;\par
 		      $\quad \qquad r := A[i] * r $\par
 		      $\quad  fi$\par
-		      $\{r = (\prod k | i <= k < N: A[k])\}$\par
+		      $\{r = (\prod k | i \leq k < N: A[k])\}$\par
 	      \end{absolutelynopagebreak}
 
 	      Se debe probar la selección, con las siguientes pruebas.\par
@@ -351,20 +351,20 @@ Demuestre el siguiente procedimiento recursivo.\par
 
 	      \textbf{Prueba 1.2.0}\par
 	      Se debe probar la siguiente tripleta.\par
-	      $\{0 \leq i \leq N \land N - i = X \land i = N\} \; r := 1 \; \{r = (\prod k | i <= k < N: A[k])\} $\par
+	      $\{0 \leq i \leq N \land N - i = X \land i = N\} \; r := 1 \; \{r = (\prod k | i \leq k < N: A[k])\} $\par
 	      Por regla de la asignación, debemos probar el siguiente predicado.\par
-	      $0 \leq i \leq N \land N - i = X \land i = N\ \Rightarrow (r = (\prod k | i <= k < N: A[k]))(r := 1) $\par
+	      $0 \leq i \leq N \land N - i = X \land i = N\ \Rightarrow (r = (\prod k | i \leq k < N: A[k]))(r := 1) $\par
 	      Por suposición del antecedente, empezando por el consecuente para alcanzar
 	      true.\par
 	      Suponemos:\par
 	      $H_0: \; 0 \leq i \leq N$\par
 	      $H_1: \; N - i = X N$\par
 	      $H_2: \; i = N$\par
-	      $\qquad (r = (\prod k | i <= k < N: A[k]))(r := 1)$\par
+	      $\qquad (r = (\prod k | i \leq k < N: A[k]))(r := 1)$\par
 	      $\equiv \qquad \langle$ Sustitucion Textual $\rangle$\par
-	      $\qquad 1 = (\prod k | i <= k < N: A[k])$\par
+	      $\qquad 1 = (\prod k | i \leq k < N: A[k])$\par
 	      $\equiv \qquad \langle$ Sustitución por $H2\rangle$\par
-	      $\qquad 1 = (\prod k | N <= k < N: A[k])$\par
+	      $\qquad 1 = (\prod k | N \leq k < N: A[k])$\par
 	      $\equiv \qquad \langle$ Rango vacío $(\prod k | false: x) = 1\rangle$\par
 	      $\qquad 1 = 1$\par
 	      $\equiv \qquad \langle$ Aritmética $\rangle$\par
@@ -373,66 +373,339 @@ Demuestre el siguiente procedimiento recursivo.\par
 
 	      \textbf{Prueba 1.2.1}\par
 	      Se debe probar la siguiente tripleta.\par
-	      $\{0 \leq i \leq N \land N - i = X \land i < N\} \; productoria(i + 1, N, A, r);r := A[i] * r \; \{r = (\prod k | i <= k < N: A[k])\} $\par
+	      $\{0 \leq i \leq N \land N - i = X \land i < N\} \; productoria(i + 1, N, A, r);r := A[i] * r \; \{r = (\prod k | i \leq k < N: A[k])\} $\par
 	      Dado que se tiene una secuenciación se debe obtener la aserción intermedia,
 	      para lo cual podemos usar el precondición más débil para la asignación.\par
-	      $\qquad wp(r := A[i]*r).(r = (\prod k | i <= k < N: A[k]))$\par
+	      $\qquad wp(r := A[i]*r).(r = (\prod k | i \leq k < N: A[k]))$\par
 	      $\equiv \qquad \langle$ Definición wp$\rangle$\par
-	      $\qquad (r = (\prod k | i <= k < N: A[k]))(r := A[i]*r)$\par
+	      $\qquad (r = (\prod k | i \leq k < N: A[k]))(r := A[i]*r)$\par
 	      $\equiv \qquad \langle$ Sustitución textual$\rangle$\par
-	      $\qquad A[i]*r = (\prod k | i <= k < N: A[k])$\par
+	      $\qquad A[i]*r = (\prod k | i \leq k < N: A[k])$\par
 
 	      De esta manera tenemos las siguientes tripletas.\par
 	      $\{0 \leq i \leq N \land N - i = X \land i < N\}$\par
 	      $\quad productoria(i + 1, N, A, r);$\par
-	      $\{A[i]*r = (\prod k | i <= k < N: A[k])\}$\par
+	      $\{A[i]*r = (\prod k | i \leq k < N: A[k])\}$\par
 	      $\quad r := A[i] * r$\par
-	      $\{r = (\prod k | i <= k < N: A[k])\} $\par
+	      $\{r = (\prod k | i \leq k < N: A[k])\} $\par
 
 	      Como la precondición más débil asegura correctitud, se considera que la
 	      asigación ya está probada, por lo tanto, los queda probar la siguiente.\par
 
 	      $\{0 \leq i \leq N \land N - i = X \land i < N\}$\par
 	      $\quad productoria(i + 1, N, A, r);$\par
-	      $\{A[i]*r = (\prod k | i <= k < N: A[k])\}$\par
+	      $\{A[i]*r = (\prod k | i \leq k < N: A[k])\}$\par
 
-		  Dado que es un procedimiento recursivo se debe probar.\par
-		  $1. \; P_{llam} \Rightarrow (P_{def} \land t < X)(x,y := E,a)$\par
-		  $2. \; P_{llam}(a,b := A,B) \land Q_{def}(x,y_0,y,z := E(a,b := A,B), A, a,b) \Rightarrow Q_{llam}$\par
+	      Dado que es un procedimiento recursivo se debe probar.\par
+	      $1. \; P_{llam} \Rightarrow (P_{def} \land t < X)(x,y := E,a)$\par
+	      $2. \; P_{llam}(a,b := A,B) \land Q_{def}(x,y_0,y,z := E(a,b := A,B), A, a,b) \Rightarrow Q_{llam}$\par
 
-		  \textbf{Prueba 1.2.1.1}\par
-		  $0 \leq i \leq N \land N - i = X \land i < N \Rightarrow (0 \leq i \leq N \land N - i < X)(i,N, A := i + 1,N,A)$\par
+	      \textbf{Prueba 1.2.1.1}\par
+	      $0 \leq i \leq N \land N - i = X \land i < N \Rightarrow (0 \leq i \leq N \land N - i < X)(i,N, A := i + 1,N,A)$\par
 
-		  Suposición del antecedente, empezando por el consecuente para alcanzar true.\par
+	      Suposición del antecedente, empezando por el consecuente para alcanzar true.\par
 
-		  Suponiendo:\par
-		  $H_0: \; 0 \leq i \leq N$\par
-		  $H_1: \; N - i = X$\par
-		  $H_2: \; i < N$\par
+	      Suponiendo:\par
+	      $H_0: \; 0 \leq i \leq N$\par
+	      $H_1: \; N - i = X$\par
+	      $H_2: \; i < N$\par
 
-		  $\qquad (0 \leq i \leq N \land N - i < X)(i,N, A := i + 1,N,A)$\par
+	      $\qquad (0 \leq i \leq N \land N - i < X)(i,N, A := i + 1,N,A)$\par
 	      $\equiv \qquad \langle$ Sustitución textual$\rangle$\par
-		  $\qquad 0 \leq i + 1 \leq N \land N - (i + 1) < X$\par
+	      $\qquad 0 \leq i + 1 \leq N \land N - (i + 1) < X$\par
 	      $\equiv \qquad \langle$ Aritmética$\rangle$\par
-		  $\qquad 0 \leq i + 1 \leq N \land N - i - 1 < X$\par
+	      $\qquad 0 \leq i + 1 \leq N \land N - i - 1 < X$\par
 	      $\equiv \qquad \langle$ Sustitución por $H_1\rangle$\par
-		  $\qquad 0 \leq i + 1 \leq N \land X - 1 < X$\par
+	      $\qquad 0 \leq i + 1 \leq N \land X - 1 < X$\par
 	      $\equiv \qquad \langle$ $a - 1 < a \equiv true\rangle$\par
-		  $\qquad 0 \leq i + 1 \leq N$\par
+	      $\qquad 0 \leq i + 1 \leq N$\par
 	      $\equiv \qquad \langle$ $a \leq b \leq c \equiv a \leq b \land b \leq c\rangle$\par
-		  $\qquad 0 \leq i + 1 \land i + 1 \leq N$\par
+	      $\qquad 0 \leq i + 1 \land i + 1 \leq N$\par
 	      $\equiv \qquad \langle$ Por $H_2: \; i < N \equiv true \Rightarrow i + 1 \leq N \rangle$\par
-		  $\qquad 0 \leq i + 1$\par
+	      $\qquad 0 \leq i + 1$\par
 	      $\equiv \qquad \langle$ Por $H_1: \; 0 \leq i \equiv true \Rightarrow 0 \leq i + 1 \rangle$\par
-		  $\qquad true$\par
-		  $\blacksquare$\par
+	      $\qquad true$\par
+	      $\blacksquare$\par
 
-		  \textbf{Prueba 1.2.1.2}\par
+	      \textbf{Prueba 1.2.1.2}\par
+	      Se debe probar el siguiente predicado.\par
+	      $(0 \leq i \leq N \land N - i = X \land i < N)(r := R) \land (r = (\prod k | i \leq k < N: A[k]))(i,N,A,r := i + 1, N,A,r) \Rightarrow A[i]*r = (\prod k | i \leq k < N: A[k])$\par
+	      Aplicando las sustituciones textuales.\par
+	      $0 \leq i \leq N \land N - i = X \land i < N \land r = (\prod k | i + 1 \leq k < N: A[k]) \Rightarrow A[i]*r = (\prod k | i \leq k < N: A[k])$\par
+
+	      Por suposición del antecedente, empezando por el consecuente para alcanzar
+	      true.\par
+
+	      Suponiendo:\par
+	      $H_0: \; 0 \leq i \leq N$\par
+	      $H_1: \; N - i = X$\par
+	      $H_2: \; i < N$\par
+	      $H_3: \; r = (\prod k | i + 1 \leq k < N: A[k])$\par
+
+	      $\qquad A[i]*r = (\prod k | i \leq k < N: A[k])$\par
+	      $\equiv \qquad \langle$ Sacando el i-esimo término de la productoria $\rangle$\par
+	      $\qquad A[i]*r = (\prod k | i < k < N: A[k])*A[i]$\par
+	      $\equiv \qquad \langle$ Aritmética $\rangle$\par
+	      $\qquad r = (\prod k | i < k < N: A[k])$\par
+	      $\equiv \qquad \langle$ Sustituyendo r por Hipótesis $ H_3\rangle$\par
+	      $\qquad (\prod k | i + 1 \leq k < N: A[k]) = (\prod k | i < k < N: A[k])$\par
+	      $\equiv \qquad \langle$ $k > i \equiv k \geq i + 1\rangle$\par
+	      $\qquad (\prod k | i < k < N: A[k]) = (\prod k | i < k < N: A[k])$\par
+	      $\equiv \qquad \langle$ Aritmética $\rangle$\par
+	      $\qquad true$\par
+	      $\blacksquare$\par
+
+	      \textbf{Prueba 2}\par
+	      Función acotada.\par
+	      $2. \; [P_{def} \Rightarrow t \geq 0]$\par
+	      $2. \; [0 \leq i \leq N \Rightarrow N - i \geq 0]$\par
+
+	      Por debilitamiento.\par
+	      $\qquad 0 \leq i \leq N$\par
+	      $\equiv \qquad \langle$ Aritmética $\rangle$\par
+	      $\qquad 0 \leq i \land i \leq N$\par
+	      $\Rightarrow \qquad \langle$ $p \land q \Rightarrow p\rangle$\par
+	      $\qquad i \leq N$\par
+	      $\equiv \qquad \langle$ Aritmética $\rangle$\par
+	      $\qquad 0 \leq N - i$\par
+	      $\equiv \qquad \langle$ Simetría $\rangle$\par
+	      $\qquad N - i \geq 0$\par
+	      $\blacksquare$\par
 
 \end{itemize}
 
 \newpage
 
+\subsection{Ejercicios Ravelo y Fernandez}\par
+
+\subsubsection{Ejercicio Propuesto 3}
+
+Halle procedimiento para el cálculo de la potencia dado un valor entero n y un
+natural m y pruebe la correctitud.\par
+$pot: \mathbb{Z} \times \mathbb{N} \rightarrow \mathbb{Z} $\par
+\begin{equation}
+	pot(n) =
+	\begin{cases}
+		1                         & \text{si } m = 0                       \\
+		pot(n * n, m \; div \; 2) & \text{si } m \neq 0 \land m \mod 2 = 0 \\
+		n * pot(n, m - 1)         & \text{si } m \neq 0 \land m \mod 2 = 1
+	\end{cases}
+\end{equation} \par
+
+\textbf{Solución}
+
+\begin{absolutelynopagebreak}
+	$\textbf{proc} \; pot(entrada \; n, m: int; salida \; r: int)$ \par
+	$\quad \{Pre: m \geq 0\}$;\par
+	$\quad \{Post: r = (\prod k | 0 \leq k < m: n)\}$;\par
+	$\quad \{Cota: m\}$;\par
+	$\qquad [$\par
+			$\qquad \quad if \; m = 0 \rightarrow r := 1$\par
+			$\qquad \quad [\;] \; m \neq 0 \land m \mod 2 = 0 \rightarrow $\par
+			$\qquad \qquad pot(n*n, m \; div \; 2, r)$;\par
+			$\qquad \quad [\;] \; m \neq 0 \land m \mod 2 = 1 \rightarrow $\par
+			$\qquad \qquad pot(n, m - 1, r)$;\par
+			$\qquad \qquad r := r * n$\par
+			$\qquad \quad fi$\par
+			$\qquad ]$\par
+\end{absolutelynopagebreak}\par
+
+Pruebas.\par
+
+Se debe probar lo siguiente.\par
+
+$1.\{P_{def} \land t = X\} \; S_0 \; \{Q_{def}\}$\par
+
+\begin{absolutelynopagebreak}
+	$\{m \geq 0 \land m = X\}$\par
+	$\quad if \; m = 0 \rightarrow r := 1$\par
+	$\quad [\;] \; m \neq 0 \land m \mod 2 = 0 \rightarrow $\par
+	$\qquad pot(n * n, m \; div \; 2, r)$;\par
+	$\quad [\;] \; m \neq 0 \land m \mod 2 = 1 \rightarrow $\par
+	$\qquad pot(n, m - 1, r)$;\par
+	$\qquad r := r * n$\par
+	$\quad fi$\par
+	$\{r = (\prod k | 0 \leq k < m: n)\}$\par
+\end{absolutelynopagebreak}\par
+
+Para porbar esta selección se deben demostrar lo siguiente.\par
+
+$1.0 \; P \Rightarrow B_0 \lor B_1 \lor B_2$\par
+$1.1 \; \{P \land B_0\}S_0\{Q\}$\par
+$1.2 \; \{P \land B_1\}S_1\{Q\}$\par
+$1.3 \; \{P \land B_2\}S_2\{Q\}$\par
+
+\textbf{Prueba 1.0:}\par
+
+$\qquad m \geq 0 \land m = X \Rightarrow m = 0 \lor (m \neq 0 \land m \mod 2 = 0) \lor (m \neq 0 \land m \mod 2 = 1)$\par
+$\equiv \qquad \langle$ $p \land (q \lor r) \equiv (p \land q) \lor (p \land r)\rangle$\par
+$\qquad m \geq 0 \land m = X \Rightarrow m = 0 \lor m \neq 0 \land(m \mod 2 = 0 \lor  m \mod 2 = 1)$\par
+$\equiv \qquad \langle$ $p \lor \neg p \equiv true\rangle$\par
+$\qquad m \geq 0 \Rightarrow m = 0 \lor m \neq 0 \land(true)$\par
+$\equiv \qquad \langle$ $p \land true \equiv p, p \lor \neg p \equiv true\rangle$\par
+$\qquad m \geq 0 \land m = X \Rightarrow true$\par
+$\equiv \qquad \langle$ $p \Rightarrow true \equiv true\rangle$\par
+$\qquad true$\par
+$\blacksquare$\par
+
+\textbf{Prueba 1.1:}\par
+$\{m \geq 0 \land m = X \land m = 0\} \; r := 1 \; \{r = (\prod k | 0 \leq k < m: n)\}$\par
+
+Por regla de la asignación, se tiene que se debe probar el siguiente predicado.\par
+
+$m \geq 0 \land m = X \land m = 0 \Rightarrow (r = (\prod k | 0 \leq k < m: n))(r := 1)$\par
+
+Por Suposición del antecedente, empezando por el consecuente para alcanzar
+true.\par
+
+Suponiendo:\par
+$H_0: m \geq 0$\par
+$H_1: m = X$\par
+$H_2: m = 0$\par
+
+$\qquad (r = (\prod k | 0 \leq k < m: n))(r := 1)$\par
+$\equiv \qquad \langle$ Sustitución textual $\rangle$\par
+$\qquad 1 = (\prod k | 0 \leq k < m: n)$\par
+$\equiv \qquad \langle$ Sustitución Hipótesis $H_2\rangle$\par
+$\qquad 1 = (\prod k | 0 \leq k < 0: n)$\par
+$\equiv \qquad \langle$ Rango vacío y elemento neutro de la multiplicaicón = 1 $\rangle$\par
+$\qquad 1 = 1$\par
+$\equiv \qquad \langle$ Aritmética $\rangle$\par
+$\qquad true$\par
+$\blacksquare$\par
+
+\textbf{Prueba 1.2:}\par
+$\{m \geq 0 \land m = X \land m \neq 0 \land m \mod 2 = 0\} \; pot(n*n, m \; div \; 2, r) \; \{r = (\prod k | 0 \leq k < m: n)\}$\par
+
+Por regla 2 debemos demostrar los siguientes 2 predicados.\par
+$1.\;[P_{llam} \Rightarrow (P_{def} \land t < X)(n, m := n*n, m \; div \; 2)]$\par
+$2.\;[P_{llam}(r := R) \land Q_{def}(n, m, r := n*n,m \; div \; 2, r) \Rightarrow Q_{llam}]$\par
+
+\textbf{Prueba 1.2.1.}\par
+$m \geq 0 \land m = X \Rightarrow (m \geq 0 \land m < X)(n,m := n * n, m \; div \; 2)$\par
+Aplicando la sustitución textual.\par
+$m \geq 0 \land m = X \land m \neq 0 \land m \mod 2 = 0 \Rightarrow m \; div \; 2 \geq 0 \land m \; div \; 2 < X$\par
+
+Por suposición del antecendete, empezando por el consecuente para alcanzar
+true.\par
+
+Suponiendo:\par
+$H_0: m \geq 0$\par
+$H_1: m = X$\par
+$H_2: m \neq 0$\par
+$H_3: m \mod 2 = 0$\par
+
+$\qquad m \; div \; 2 \geq 0 \land m \; div \; 2 < X$\par
+$\equiv \qquad \langle$ Susutitución por Hipótesis $H_1\rangle$\par
+$\qquad X \; div \; 2 \geq 0 \land X \; div \; 2 < X$\par
+$\equiv \qquad \langle$ Por Hipótesis $H_0, H_1 H_2: m \geq 0 \land m = X \land m \neq 0 \equiv true \Rightarrow X > 0 \land div \; 2 \geq 0 \Rightarrow X \; div \; 2 > 0 \rangle$\par
+$\qquad X \; div \; 2 > 0 \land X \; div \; 2 < X$\par
+$\equiv \qquad \langle$ Por Hipótesis $a \; div \; 2 < a \equiv true \; \forall \; a > 0 \rangle$\par
+$\qquad X \; div \; 2 > 0 \land X \; div \; 2 < X$\par
+$\equiv \qquad \langle$ $a \; div \; 2 < a \equiv true \; \forall \; a > 0 \rangle$\par
+$\qquad X \; div \; 2 > 0$\par
+$\equiv \qquad \langle$ Por Hipótesis $H_1, H2, H_3: m = X \land m \neq 0 \land m \mod 2 = 0 \equiv true \Rightarrow X \; div \; 2 > 0 \rangle$\par
+$\qquad true > 0$\par
+$\blacksquare$\par
+
+\textbf{Prueba 1.2.2}\par
+
+$m \geq 0 \land m = X \land m \neq 0 \land m \mod 2 = 0 \land (r = (\prod k | 0 \leq k < m: n))(n, m, r := n*n,m \; div \; 2, r) \Rightarrow r = (\prod k | 0 \leq k < m: n) $\par
+
+Aplicando la sustitución textual.\par
+
+$m \geq 0 \land m = X \land m \neq 0 \land m \mod 2 = 0 \land r = (\prod k | 0 \leq k < m \; div \; 2: n * n) \Rightarrow r = (\prod k | 0 \leq k < m: n) $\par
+
+Por suposición del antecedente.\par
+
+Suponemos: \par
+$H_0: m \geq 0$\par
+$H_1: m = X$\par
+$H_2: m \neq 0$\par
+$H_3: m \mod 2 = 0$\par
+$H_4: r = (\prod k | 0 \leq k < m \; div \; 2: n * n)$\par
+
+$\qquad true$\par
+$\equiv \qquad \langle$ Hipótesis $H_3\rangle$\par
+$\qquad m \mod 2 = 0$\par
+$\equiv \qquad \langle$ Aritmética $m \mod 2 = 0 \equiv (\exists q| q \in \mathbb{N} : m = 2 * q)\rangle$\par
+$\qquad (\exists q| q \in \mathbb{N} : m = 2 * q)$\par
+$\equiv \qquad \langle$ Hipótesis $H_4\rangle$\par
+$\qquad (\exists q| q \in \mathbb{N} : m = 2 * q) \land r = (\prod k | 0 \leq k < m \; div \; 2: n * n)$\par
+$\equiv \qquad \langle$ Dado $H_3 \Rightarrow m \; div \; 2 = m / 2 \rangle$\par
+$\qquad (\exists q| q \in \mathbb{N} : m = 2 * q) \land r = (\prod k | 0 \leq k < m / 2: n * n)$\par
+$\equiv \qquad \langle$ Sustitución $ m = 2 * q \rangle$\par
+$\qquad (\exists q| q \in \mathbb{N} : m = 2 * q) \land r = (\prod k | 0 \leq k < (2 * q) / 2: n * n)$\par
+$\equiv \qquad \langle$ Aritmética: $ (2 * q) / 2 = q; \; n * n = n^2 \rangle$\par
+$\qquad (\exists q| q \in \mathbb{N} : m = 2 * q) \land r = (\prod k | 0 \leq k < q: n^2)$\par
+$\equiv \qquad \langle$ Aritmética: $ (\prod k | 0 \leq k < a: b) = b^a \rangle$\par
+$\qquad (\exists q| q \in \mathbb{N} : m = 2 * q) \land r = (n^2)^q$\par
+$\equiv \qquad \langle$ Aritmética $ \rangle$\par
+$\qquad (\exists q| q \in \mathbb{N} : m = 2 * q) \land r = n^{2q}$\par
+$\equiv \qquad \langle$ Sustitución $ m = 2 * q \equiv q = m / 2 \rangle$\par
+$\qquad (\exists q| q \in \mathbb{N} : m = 2 * q) \land r = n^{2*m/2}$\par
+$\equiv \qquad \langle$ Aritmética $ \rangle$\par
+$\qquad (\exists q| q \in \mathbb{N} : m = 2 * q) \land r = n^m$\par
+$\equiv \qquad \langle$ Aritmética: $ (\prod k | 0 \leq k < a: b) = b^a \rangle$\par
+$\qquad (\exists q| q \in \mathbb{N} : m = 2 * q) \land r = (\prod k | 0 \leq k < m: n)$\par
+$\Rightarrow \qquad \langle$ $ p \land q \Rightarrow p\rangle$\par
+$\qquad r = (\prod k | 0 \leq k < m: n)$\par
+$\blacksquare$\par
+
+\textbf{Prueba 1.3}\par
+
+$\{m \geq 0 \land m = X \land m \neq 0 \land m \mod 2 = 1\} \; pot(n, m - 1, r) \; \{r = (\prod k | 0 \leq k < m: n)\}$\par
+
+Se deben probar los sigueintes predicados.\par
+
+$1. [P_{llam} \Rightarrow (P_{def} \land m < X)(n,m := n, m - 1)]$\par
+$2. [P_{llam} \land Q_{def}(n,m,r := n, m - 1, r) \Rightarrow Q_{llam}]$\par
+
+\textbf{Prueba 1.3.1}
+
+$m \geq 0 \land m = X \land m \neq 0 \land m \mod 2 = 1 \Rightarrow (m \geq 0 \land m < X)(n,m := n, m - 1)$\par
+
+Aplicando la sustitución textual.\par
+
+$m \geq 0 \land m = X \land m \neq 0 \land m \mod 2 = 1 \Rightarrow m - 1 \geq 0 \land m - 1 < X$\par
+
+Suponemos el antecedente, empezando por el conscuente para alcanzar true.\par
+
+Suponiendo:\par
+$H_0: m \geq 0$\par
+$H_1: m = X$\par
+$H_2: m \neq 0$\par
+$H_3: m \mod 2 = 1$\par
+
+$\qquad m - 1 \geq 0 \land m - 1 < X$\par
+$\equiv \qquad \langle$ Hipótesis $m \geq 0 \land m \neq 0 \equiv m > 0 \equiv true \Rightarrow m \geq 1 \equiv m - 1 \geq 0\rangle$\par
+$\qquad m - 1 < X$\par
+$\equiv \qquad \langle$ Sustitución Hipótesis $m = X\rangle$\par
+$\qquad X - 1 < X$\par
+$\equiv \qquad \langle$ $a - 1 < a \equiv true\rangle$\par
+$\qquad true$\par
+$\blacksquare$\par
+
+\textbf{Prueba 1.3.2}
+
+$m \geq 0 \land m = X \land m \neq 0 \land m \mod 2 = 1 \land (r = (\prod k | 0 \leq k < m: n))(n,m,r := n, m - 1, r) \Rightarrow r = (\prod k | 0 \leq k < m: n)$\par
+
+Aplicando la sustitución textual.\par
+
+$m \geq 0 \land m = X \land m \neq 0 \land m \mod 2 = 1 \land r = (\prod k | 0 \leq k < m - 1: n) \Rightarrow r = (\prod k | 0 \leq k < m: n)$\par
+
+Aplicando el método prueba por debilitamiento.\par
+
+$\qquad m \geq 0 \land m = X \land m \neq 0 \land m \mod 2 = 1 \land r = (\prod k | 0 \leq k < m - 1: n)$\par
+$\Rightarrow \qquad \langle$ $ m \geq 0 \land m \neq 0 \Rightarrow m > 0\rangle$\par
+$\qquad m > 0 \land m = X \land m \mod 2 = 1 \land r = (\prod k | 0 \leq k < m - 1: n)$\par
+$\equiv \qquad \langle$ $ k < m - 1 \equiv k < m \rangle$\par
+$\qquad m > 0 \land m = X \land m \mod 2 = 1 \land r = (\prod k | 0 \leq k < m: n)$\par
+$\Rightarrow \qquad \langle$ $ p \land q \Rightarrow p$\par
+$\qquad r = (\prod k | 0 \leq k < m: n)$\par
+$\blacksquare$\par
+
+\newpage
 \section{Invariante de Cola}
 
 \subsection{Ejercicios Kaldewaij}\par
@@ -465,9 +738,9 @@ Derivar programa para la exponenciación $x^y$.\par
 	\item Se define el invariante: $P: F(A,B) = r \cdot F(x,y) \equiv A^B = r \cdot x^y$.\par
 	\item Variables y valores iniciales.\par
 
-	      EL operador principal de F es la multiplicación cuyo elemento neutro es 1, por
-	      lo tanto nuestra variable de resultador $r$ se inicializa en 1, mientras que
-	      $x$ se inicializa en su valor máximo $A$ y $y$ igualmente en su valor máximo B.\par
+	      El operador principal de F es la multiplicación cuyo elemento neutro es 1, por
+	      lo tanto nuestra variable de resultado $r$ se inicializa en 1, mientras que $x$
+	      se inicializa en su valor máximo $A$ y $y$ igualmente en su valor máximo B.\par
 
 	      \begin{center}
 		      $r,x,y : = 1, A, B$
@@ -741,7 +1014,7 @@ Derivar un programa para el cálculo de $A(N)$, $N \geq 0$\par
 		            $\equiv \quad \langle$ Definición de $F \rangle$\par
 		            $\qquad F(N) = r + 2*A(n)$\par
 	      \end{itemize}
-
+	      \textcolor{red}{Incompleto!!!!}
 \end{enumerate}
 
 \newpage
@@ -768,7 +1041,7 @@ Pruebe que la función recursiva es correcta.\par
 \textbf{Solución}\par
 
 \begin{enumerate}
-	\item La función recursiva se da en el resultado.\par
+	\item La función recursiva se da en el enunciado.\par
 	      \begin{equation}
 		      C(n) =
 		      \begin{cases}
@@ -822,7 +1095,6 @@ Pruebe que la función recursiva es correcta.\par
 			      $\qquad r, n := 1, N$;\par
 			      $\qquad \{Inv: C(N) = r * C(n)\} \{Cota: n\}$\par
 			      $\qquad do \; n \neq 0 \rightarrow$\par
-			      $\qquad \quad A[N - n] := r$\par
 			      $\qquad \quad r, n := r * \frac{2(2n - 1)}{n + 1}, n - 1$;\par
 			      $\qquad od$\par
 			      $\quad \{r = C(N)\}$ \par
@@ -924,6 +1196,88 @@ Dada una matriz de tamaño NxN devolver la suma de los elementos de la diagonal.
 		$\qquad >> r$\par
 	]\par
 \end{absolutelynopagebreak}\par
+
+\newpage
+
+\subsection{Ejerccios de clases}
+
+\subsubsection{Ejercicio Practica Ene-Mar 2025}
+
+Usando la técnica de invariante de cola se quiere que derive un programa que
+compute la función $F: \mathbb{Z} \times \mathbb{Z}$.\par
+
+\begin{equation}
+	F(n, i) =
+	\begin{cases}
+		n * 42                  & \text{si } i = 0 \\
+		n + i + F(n - i, i - 1) & \text{si } i > 0
+	\end{cases}
+\end{equation} \par
+
+\textbf{Solución}\par
+
+Nos encontramos en el caso 2 ya que la llamada recursiva contiene una operación
+de suma con otros términos que no son la función $F$.\par
+
+\begin{enumerate}
+	\item Invariante de cola: Se propone el invariante de cola a continuación. Partiendo
+	      del hecho de que la función busca obtener resultado para un valor de $N,I \in
+		      \mathbb{Z}$ proporcionado.\par
+	      \begin{center}
+		      $P: F(N,I) = r + F(n,i)$\par
+		      $Q: 0 \leq i \leq I$\par
+	      \end{center}
+	\item Valores iniciales: Dado que el operador principal en la llamada recursiva es
+	      suma, se inicializa a r en el elemento neutro de la suma que es 0.\par
+	      Este valor incial debe permitir que el invariante se cumpla antes de entrar en
+	      el bucle.\par
+	      $F(N,I) = 0 + F(n,i) = F(n,i)$\par
+	      Por lo tanto, a $n$ se inicializa en el valor proporcionado por la llamada de
+	      $F$, esto es $N$, mientras que $i$ se inicializa en el valor proporcionado $I$.
+	      \begin{center}
+		      $r,n,i := 0,N,I$\par
+	      \end{center}
+	\item Caso base: Dado que $i$ empieza en el valor $I$ entonces el caso base será $i =
+		      0$ como lo indica la definición de $F$. Evaluemos al invariante en $i = 0$.\par
+	      $F(N,I) = r + F(n,0) = r + n * 42$\par
+
+	      De esta manera, el invariante se cumple al finalizar el bucle y el resultado
+	      final es \par
+	      $F(N,I) = r + n * 42$\par
+	      Lo cual nos indica que al finalizar la iteración se debe hacer la siguiente
+	      asignación.\par
+	      \begin{center}
+		      $r := r + n * 42$\par
+	      \end{center}
+	\item Dentro del bucle: Cuando $i > 0$ el invariante debe cumplirse, veamos.\par
+	      $\qquad r + F(n,i)$\par
+	      $\equiv \qquad \langle$ Definición de $F\rangle$\par
+	      $\qquad r + n + i + F(n - i, i - 1)$\par
+	      $\equiv \qquad \langle$ Asociatividad $\rangle$\par
+	      $\qquad (r + n + i) + F(n - i, i - 1)$\par
+	      $\equiv \qquad \langle$ Invariante $P\rangle$\par
+	      $\qquad P(r,n,i := r + n + i, n - i, i - 1)$\par
+
+	      Por lo tanto, dentro del bucle, se deben hacer las siguientes actualizaciones.\par
+	      \begin{center}
+		      $r,n,i := r + n + i, n - i, i - 1$\par
+	      \end{center}
+	      Finalmente, el programa queda.\par
+	      \begin{absolutelynopagebreak}
+		      $\quad [$\par
+				      $\quad const \; N, I : int$;\par
+				      $\quad var \; r,n,i : int$;\par
+				      $\qquad \{N \geq 0 \land I \geq 0\}$;\par
+				      $\qquad r, n, i := 0, N, I$;\par
+				      $\qquad \{Inv: F(N,I) = r + F(n,i)\} \{Cota: i\}$\par
+				      $\qquad do \; i \neq 0 \rightarrow$\par
+				      $\qquad \quad r, n, i := r + n + i, n - i, i - 1$;\par
+				      $\qquad od$\par
+				      $\qquad r := r + n * 42$\par
+				      $\quad \{r = F(N,I)\}$ \par
+				      $\quad ]$\par
+	      \end{absolutelynopagebreak}\par
+\end{enumerate}
 
 \newpage
 
@@ -1177,12 +1531,116 @@ Derive un programa que calcule fusc(N) con $N \geq 0$.
 		      \end{cases}
 	      \end{equation} \par
 
-	\item Se define como invariante el siguiente predicado.\par
+	      \textcolor{red}{¡¡Falta resolver!!}
+	
+\end{enumerate}\newpage
+
+\subsubsection{Ejercicio de practica Abr-Jul 2025}
+
+Usando la técnica de recursión de cola se quiere que derive uan fución
+recursiva de cola a partir de la siguiente función recursiva.\par
+
+\begin{equation}
+	F(n) =
+	\begin{cases}
+		42                          & \text{si } n = -20 \\
+		73                          & \text{si } n = -19 \\
+		F(n - 1)^2 - 5 * F(n - 2) & \text{si } n > -19
+	\end{cases}
+\end{equation} \par
+
+\textbf{Solución}
+
+\begin{enumerate}
+	\item Identificar llamadas recursivas:\par
+	      $F(n - 19), F(n - 20)$\par
+	\item Acumuladores: Se definen dos acumuladores ya que se tienen dos llamadas
+	      recursivas.\par
+	      $a \rightarrow F(n - 19)$\par
+	      $b \rightarrow F(n - 20)$\par
+	      Se debe definir las expresiones que relacionan a los acumuladores $a$ y $b$ con
+	      $F$, se proponen las siguientes.\par
 	      \begin{center}
-		      $P: fusc(n) = fusc(N) $\par
-		      $Q: N \geq 0 $\par
+		      $a = F(N - n - 19)$\par
+		      $b = F(N - n - 20)$\par
 	      \end{center}
+	\item Variable de iteración: En este caso n es la variable de iteración la cual es
+	      decresciente.\par
+	      De esta manera la fución estaría definida como sigue.\par
+	      \begin{absolutelynopagebreak}
+		      $\textbf{func} \; FCola(n: int, a: int, b: int) \rightarrow int$ \par
+		      $\quad\{a = F(N - n - 19) \land b = F(N - n - 20)\}$\par
+	      \end{absolutelynopagebreak}\par
+	\item Condiciones iniciales: Dadas las expresiones de $a$ y $b$ como fueron
+	      definidas, conviene que el valor inicial de $n = N$ para lo cual se tiene los
+	      siguientes valores para los acumuladores.\par
+	      $a = F(N - N - 19) = F(-19) = 73$\par
+	      $b = F(N - N - 20) = F(-20) = 42$\par
+	\item Casos base: Se tienen dos casos base por la definición de $F$. Por lo tanto, se
+	      debe evaluar el comportamiento de los acumuladores en estos casos.\par
+	      Cuando $n = -19$\par
+	      $a = F(N - (-19) - 19) = F(N + 19 - 19) = F(N)$\par
+	      $b = F(N - (-19) - 20) = F(N + 19 - 20) = F(N - 1)$\par
+	      Cuando $n = -20$\par
+	      $a = F(N - (-20) - 19) = F(N + 20 - 19) = F(N + 1)$\par
+	      $b = F(N - (-20) - 20) = F(N + 20 - 20) = F(N)$\par
+	      De donde se obtiene lo siguiente.\par
+	      \begin{center}
+		      $n = -19 \Rightarrow a = F(N)$\par
+		      $n = -20 \Rightarrow b = F(N)$\par
+	      \end{center}
+	\item Caso recursivo: Como $n$ es decreciente, consideremos el caso en que $n := n -
+		      1$, a partir de los acumuladores de manera que podamos determinar cómo se
+	      actualizan.\par
+		  Para a:\par
+	      $\qquad (a = F(N - n - 19))(n := n - 1)$\par
+		  $\equiv \qquad \langle$ Sustitución textual $\rangle$\par
+	      $\qquad a = F(N - (n - 1) - 19)$\par
+		  $\equiv \qquad \langle$ Aritmética $\rangle$\par
+	      $\qquad a = F(N - n - 18)$\par
+		  $\equiv \qquad \langle$ Definición $F \; para\; n > -19\rangle$\par
+	      $\qquad a = F((N - n - 18) - 1)^2 - 5 * F((N - n - 18) - 2)$\par
+		  $\equiv \qquad \langle$ Aritmética $\rangle$\par
+	      $\qquad a = F(N - n - 19)^2 - 5 * F(N - n - 20)$\par
+		  $\equiv \qquad \langle$ Definición $a,b\rangle$\par
+	      $\qquad a = a^2 - 5 * b$\par
+
+		  Para b:\par
+	      $\qquad (b = F(N - n - 20))(n := n - 1)$\par
+		  $\equiv \qquad \langle$ Sustitución textual $\rangle$\par
+	      $\qquad b = F(N - (n - 1) - 20)$\par
+		  $\equiv \qquad \langle$ Aritmética $\rangle$\par
+	      $\qquad b = F(N - n - 19)$\par
+		  $\equiv \qquad \langle$ Definición $b\rangle$\par
+	      $\qquad b = a$\par
+
+		  Por lo tanto, la actualización de $a$ y $b$ es.\par
+
+		  \begin{center}
+			$a,b := a^2 - 5 * b, a$\par
+		  \end{center}
 \end{enumerate}
+
+El programa queda de la siguiente manera.\par
+
+\begin{absolutelynopagebreak}
+	$\textbf{func} \; FCola(n: int, a: int, b: int) \rightarrow int$ \par
+	$\quad \{n >= -20 \}$\par
+	$\quad [$\par
+		$\qquad var \; r: int$;\par
+		$\qquad if \; n = -20 \rightarrow r := b$\par
+		$\qquad [\;] \; n = -19 \rightarrow r := a$\par
+		$\qquad [\;] \; i < N \rightarrow r := FCola(n - 1, a^2 - 5 * b, a)$\par
+		$\qquad fi$\par
+		$\qquad >> r$\par
+	$\quad ]$\par
+\end{absolutelynopagebreak}\par
+
+La función debe ser llamada de la siguiente forma:\par
+
+\begin{center}
+$FCola(N, 73, 42)$
+\end{center}
 
 \newpage
 
